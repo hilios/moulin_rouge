@@ -28,16 +28,20 @@ Generate a permission file:
     
 Add your permissions to newly create file:
   
-    role :name do
-      can :read, :something
-    end
+```ruby
+role :name do
+  can :read, :something
+end
+```
   
 Finally include to your model that will have role
 
-    class User < ActiveRecord::Base
-      include MoulinRouge::RoleSystem
-      ...
-    end
+```ruby
+class User < ActiveRecord::Base
+  include MoulinRouge::RoleSystem
+  ...
+end
+```
 
 Usage
 -----
@@ -57,61 +61,65 @@ It should create the following folder structure:
       | | initalizers
       | | | moulin_rouge.rb
     
-Defining the roles
-
+### Defining roles ###
     
 All your permission files will be stored in the +app/permissions+ folder, this is nothing less. There is a custom syntax to help you in the process, but first, you must understand what are Groups and Roles.
   
-    role :superuser do
-      can :manage, :all
-    end
-  
-    role :editors do
-      can :manage, Articles
-    end
-  
-    role :authors do
-      can :manage, Article do |article|
-        article.user_id == user.id
-      end
-    end
+```ruby
+role :superuser do
+  can :manage, :all
+end
+
+role :editors do
+  can :manage, Articles
+end
+
+role :authors do
+  can :manage, Article do |article|
+    article.user_id == user.id
+  end
+end
+```
   
 ### Nested Roles ###
 
 You can go even further and nest all your rules, of course the top ones will embed all nested one, but it won't override definitions.
   
-    role :marketing do
-      can :manage, :all
-  
-      role :salesman do
-        can :manage, Proposal
+```ruby
+role :marketing do
+  can :manage, :all
 
-        role :representatives do
-          can :read, Proposal
-        end
-      end
+  role :salesman do
+    can :manage, Proposal
+
+    role :representatives do
+      can :read, Proposal
     end
-  
+  end
+end
+```
   
 ### Groups ###
   
 A group is an easy way to organize your permissions, no matter where file the definition is. They are automatically nested together.
 
-    group :managers do
-      role :marketing do
-        can :manage, Sales
-      end
-    end
-  
-    group :managers do
-      role :project do
-        can :manage, Project
-      end
-    end
+```ruby
+group :managers do
+  role :marketing do
+    can :manage, Sales
+  end
+end
+
+group :managers do
+  role :project do
+    can :manage, Project
+  end
+end
+```
   
 Credits
 =======
 
-*   Troles[https://github.com/kristianmandrup/trole]
-*   CanTango[CanTango[https://github.com/kristianmandrup/cantango]
-*   Declarative Authorization[https://github.com/stffn/declarative_authorization]
+*   [Troles](https://github.com/kristianmandrup/trole)
+*   [CanTango](https://github.com/kristianmandrup/cantango)
+*   [Declarative Authorization](https://github.com/stffn/declarative_authorization)
