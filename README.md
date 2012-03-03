@@ -63,7 +63,7 @@ It should create the following folder structure:
     
 ### Defining roles ###
     
-All your permission files will be stored in the +app/permissions+ folder, this is nothing less. There is a custom syntax to help you in the process, but first, you must understand what are Groups and Roles.
+All your permission files will be stored in the `app/permissions` folder, this is nothing less. There is a custom syntax to help you in the process, but first, you must understand what are Groups and Roles.
   
 ```ruby
 role :superuser do
