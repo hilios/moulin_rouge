@@ -3,9 +3,9 @@ Moulin Rouge
 
 For those who don't know, Mouling Rouge (The Red Windmill) is a cabaret in Paris best know as the birthplace on modern [CanCan](https://github.com/ryanb/cancan) second to [Wikipedia](http://en.wikipedia.org/wiki/Moulin_Rouge).
 
-A simple and organized solution to include a role system into your application and a helper to manage authorizations with [CanCan](https://github.com/ryanb/cancan). It's heavily on the KISS concept and based on the bitmask scheme proposed by Ryan Bates with some of the drawbacks resolved for your convinience.
+But what you really needs to know, that **MR** is a simple and organized solution to include a role system into your application and a helper to manage authorizations with [CanCan](https://github.com/ryanb/cancan). It's heavily on the KISS concept and based on the bitmask scheme proposed by Ryan Bates with some solutions for the drawbacks to your convinience.
 
-*Moulin Rouge* act has a DSL to declare and manage permissions and groups os access, further in this text there are examples to show you how to do it.
+**Moulin Rouge** act has a DSL to declare and manage permissions and groups os access, further in this text there are examples to show you how to do it.
 
 Installation
 ------------
@@ -60,7 +60,7 @@ It should create the following folder structure:
 Defining the roles
 
     
-All your permission files will be stored in the app/permissions folder, this is nothing less. There is a custom syntax to help you in the process, but first, you must understand what are Groups and Roles.
+All your permission files will be stored in the +app/permissions+ folder, this is nothing less. There is a custom syntax to help you in the process, but first, you must understand what are Groups and Roles.
   
     role :superuser do
       can :manage, :all
