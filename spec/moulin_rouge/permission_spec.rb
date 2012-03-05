@@ -40,23 +40,23 @@ describe MoulinRouge::Permission do
   
   describe "#authorizations" do
     it "returns an array" do
-      permission.authorizations.should be_a(Array)
+      permission.abilities.should be_a(Array)
     end
   end
   
   describe "#can" do
-    it "stores the given arguments and block into authorizations array" do
+    it "stores the given arguments and block into abilities array" do
       permission.can(:do, :something) { :block }
-      permission.authorizations.should_not be_empty
-      permission.authorizations.first.should be_a(MoulinRouge::Authorization)
-      permission.authorizations.first.block.should be_a(Proc)
-      permission.authorizations.first.args.should be_a(Array)
-      permission.authorizations.first.args.should eq([:do, :something])
+      permission.abilities.should_not be_empty
+      permission.abilities.first.should be_a(MoulinRouge::Ability)
+      permission.abilities.first.block.should be_a(Proc)
+      permission.abilities.first.args.should be_a(Array)
+      permission.abilities.first.args.should eq([:do, :something])
     end
     
     it "stores nil on block attribute when no block is given" do
       permission.can(:do, :something)
-      permission.authorizations.first.block.should be_nil
+      permission.abilities.first.block.should be_nil
     end
   end
   

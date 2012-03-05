@@ -33,7 +33,7 @@ describe MoulinRouge do
       end
 
       it "require all files in the configuration path" do
-        required_files.shift
+        required_files.shift # Remove the DSL file
         required_files.should include(*Dir[MoulinRouge.configuration.path]) # Glob all files in the path
       end
     end
