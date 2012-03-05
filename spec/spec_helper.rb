@@ -24,7 +24,7 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.before do
     MoulinRouge.configure do |config|
-      config.path = "spec/fixtures/**/*.rb"
+      config.path = File.expand_path(File.dirname(__FILE__)) + "/fixtures/**/*.rb"
     end
   end
   # Remove the permission file created by the spec

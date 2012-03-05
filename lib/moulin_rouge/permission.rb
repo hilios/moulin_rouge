@@ -28,6 +28,7 @@ module MoulinRouge
     def role(name, &block)
       Permission.new(name, self, &block)
     end
+    alias :group :role
     
     # Save the given parameters to the authorizations list
     def can(*args, &block)

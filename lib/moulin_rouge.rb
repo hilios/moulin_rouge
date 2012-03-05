@@ -1,6 +1,8 @@
 Dir[File.expand_path("model_shifter/**/*.rb", File.dirname(__FILE__))].each {|f| require f;}
 
 module MoulinRouge
+    class FileNotFound < Exception; end
+  
     # Returns the global Configuration object.
     def self.configuration
       @configuration ||= MoulinRouge::Configuration.new
@@ -14,6 +16,8 @@ module MoulinRouge
     # Require the DSL and glob the path and require all permissions
     def self.run
       require 'moulin_rouge/dsl'
-      Dir[MoulinRouge.configuration.path].each { |f| require f }
+      Dir[MoulinRouge.configuration.path].each do |f| 
+        raise FileNotFound unless require f
+      end
     end
 end

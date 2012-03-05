@@ -1,3 +1,5 @@
+require 'moulin_rouge/permission'
+
 module MoulinRouge
   module DSL
     # Define a role in the system.

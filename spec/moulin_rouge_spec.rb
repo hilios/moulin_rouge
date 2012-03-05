@@ -20,22 +20,31 @@ describe MoulinRouge do
   end
   
   describe "#run" do
-    let(:required_files) { [] }
-    
-    before do
-      MoulinRouge.stub(:require) { |file| required_files << file }
-      MoulinRouge.run
+    context "(with stubs)" do
+      let(:required_files) { [] }
+      
+      before(:each) do
+        MoulinRouge.stub(:require) { |file| required_files << file }
+        MoulinRouge.run
+      end
+
+      it "includes the dsl" do
+        required_files.first.should eq("moulin_rouge/dsl")
+      end
+
+      it "require all files in the configuration path" do
+        required_files.shift
+        required_files.should include(*Dir[MoulinRouge.configuration.path]) # Glob all files in the path
+      end
     end
     
-    it "loads the dsl at first" do
-      required_files.first.should eq("moulin_rouge/dsl")
-    end
-    
-    it "loads all the files in the configuration path" do
-      required_files.shift # Remove the dsl
-      glob_path = Dir[MoulinRouge.configuration.path] # Glob all files in the path
-      glob_path.each do |file|
-        required_files.should include(file)
+    context "(without stubs)" do
+      before(:each) do
+        MoulinRouge.run
+      end
+      
+      it "evaluate all permissions in the path" do
+        MoulinRouge::Permission.list.should_not be_empty
       end
     end
   end
