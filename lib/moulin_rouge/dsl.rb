@@ -1,12 +1,11 @@
 module MoulinRouge
   module DSL
-    # Define a role
+    # Define a role in the system.
+    # Inside
     def role(name, &block)
+      MoulinRouge::Permission.new(name, nil, &block)
     end
     alias :group :role
-    # Just store the ability to apply later
-    def can(*args, &block)
-    end
   end
 end
 
