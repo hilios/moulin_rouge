@@ -1,3 +1,5 @@
+require 'active_support/concern'
+
 module MoulinRouge
   module RolesSystem
     extend ActiveSupport::Concern

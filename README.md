@@ -3,7 +3,7 @@ Moulin Rouge
 
 For those who don't know, Mouling Rouge (The Red Windmill) is a cabaret in Paris best know as the birthplace on modern [CanCan](https://github.com/ryanb/cancan) second to [Wikipedia](http://en.wikipedia.org/wiki/Moulin_Rouge).
 
-But what you really needs to know, that **MR** is a simple and organized solution to include a role system into your application and a helper to manage authorizations with [CanCan](https://github.com/ryanb/cancan). It's heavily on the KISS concept and based on the bitmask scheme proposed by Ryan Bates with some solutions for the drawbacks to your convinience.
+But what you really wants to know, is that **MR** is a simple and organized solution to include a role system into your application and a helper to manage authorizations with [CanCan](https://github.com/ryanb/cancan). It's heavily based on the KISS concept and on the bitmask scheme proposed by Ryan Bates with some of the drawbacks solved to your convinience.
 
 **Moulin Rouge** act has a DSL to declare and manage permissions and groups os access, further in this text there are examples to show you how to do it.
 
@@ -52,7 +52,7 @@ When you run:
 
       bundle g moulinrouge:install
     
-It should create the following folder structure:
+This will create the following folder structure:
 
       root
       | app/
