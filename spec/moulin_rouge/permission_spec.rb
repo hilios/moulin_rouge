@@ -6,6 +6,7 @@ describe MoulinRouge::Permission do
   describe "#initialize" do
     it "evaluate the permissions and authorizations to the class scope" do
       permission = MoulinRouge::Permission.new(:scope) do
+        self.class.should == MoulinRouge::Permission
         can :do, :something
         role :for
       end
