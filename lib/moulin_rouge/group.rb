@@ -1,6 +1,6 @@
 module MoulinRouge  
   # A wrapper to catch and store the DSL methods
-  class Permission
+  class Group
     # Holds the name of this permission.
     attr_reader :name
     
@@ -18,18 +18,18 @@ module MoulinRouge
       @abilities = []
       instance_eval(&block) if block_given?
       # Add this instance to the list inside singleton object
-      Permission.list << self
+      self.class.list << self
     end
     
     # Returns a new Permission with the parent setted to self
     def role(name, &block)
-      Permission.new(name, self, &block)
+      self.class.new(name, self, &block)
     end
     alias :group :role
     
     # Save the given parameters to the authorizations list
     def can(*args, &block)
-      @abilities << Ability.new(args, block)
+      @abilities << AbilityInfo.new(args, block)
     end
     
     class << self
