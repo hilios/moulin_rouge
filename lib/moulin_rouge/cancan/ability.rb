@@ -6,9 +6,6 @@ module MoulinRouge
       include ::CanCan::Ability
       
       def initialize(user)
-        MoulinRouge::Permission.list.each do |role, abilities|
-          
-        end
       end
     end
   end
