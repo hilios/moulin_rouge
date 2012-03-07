@@ -17,7 +17,9 @@ module MoulinRouge
       instance_eval(&block) if block_given?
     end
     
-    # Define a new role inside the scope of this stage
+    # Define a new role inside the scope of this stage. If exists a role
+    # with the same name evaluate the block inside them instead of create
+    # a new one
     def role(name, &block)
       if children = find(name)
         children.instance_eval(&block)
@@ -49,7 +51,7 @@ module MoulinRouge
       Dir[path].each { |file| eval(File.open(file).read) }
     end
     
-    # Returns true if the name and parent of both object are the same and false otherwise
+    # Returns the instance of the children with the given name if exists and nil otherwise
     def find(name)
       childrens.each { |children| return children if children.name == name }
      return nil

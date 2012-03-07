@@ -103,6 +103,34 @@ describe MoulinRouge::Stage do
       stage.import(MoulinRouge.configuration.path)
       files_opened.should include(*Dir[MoulinRouge.configuration.path])
     end
+    
+    it "let raise exceptions when there are syntax errors" do
+      tests = []
+      tests << %|
+        # Wrong method name
+        roe :name do
+        end
+      |
+      tests << %|
+        # Wrong method name
+        groups :name do
+        end
+      |
+      tests << %|
+        # Wrong method name
+        cn :
+      |
+      tests << %|
+        # Wrong method name
+        role do
+        end
+      |
+      # Execute them all
+      tests.each do |test|
+        create_permission test
+        lambda { stage.import(MoulinRouge.configuration.path) }.should raise_error
+      end
+    end
   end
   
   describe "#find" do

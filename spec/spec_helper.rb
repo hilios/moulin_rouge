@@ -9,12 +9,12 @@ Dir[File.expand_path("spec/support/**/*.rb")].each {|f| require f}
 # Require all files from the project
 Dir[File.expand_path("lib/**/*.rb")].each {|f| require f}
 
-def spec_permission
-  File.expand_path("spec/support/spec_permission.rb")
+def permission_file
+  File.expand_path("spec/fixtures/spec_permission.rb")
 end
 
-def permission(content)
-  File.open(spec_permission, 'w') do |f|
+def create_permission(content)
+  File.open(permission_file, 'w') do |f|
     f.write content
     f.close
   end
@@ -24,11 +24,11 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.before do
     MoulinRouge.configure do |config|
-      config.path = File.expand_path(File.dirname(__FILE__)) + "/fixtures/**/*.rb"
+      config.path = File.join(File.expand_path(File.dirname(__FILE__)), "/fixtures/**/*.rb")
     end
   end
-  # Remove the permission file created by the spec
-  config.after do
-    FileUtils.rm_rf(spec_permission)
+  # Remove the permission file created by the helper
+  config.after(:each) do
+    FileUtils.rm_rf(permission_file) if File.exists?(permission_file)
   end
 end
