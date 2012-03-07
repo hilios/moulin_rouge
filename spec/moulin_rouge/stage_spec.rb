@@ -81,9 +81,8 @@ describe MoulinRouge::Stage do
   
   context "self" do
     describe "#main" do
-      it "holds the main MoulinRouge::Groups instances" do
-        stage
-        MoulinRouge::Stage.main.should be(stage)
+      it "returns the main MoulinRouge::Stage instance" do
+        MoulinRouge::Stage.main.should be_instance_of(stage.class)
       end
     end
   end

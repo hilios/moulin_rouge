@@ -15,8 +15,6 @@ module MoulinRouge
       @parent = parent
       @abilities = []
       instance_eval(&block) if block_given?
-      # Add this instance to the list inside singleton object
-      self.class.main = self if parent.nil?
     end
     
     # Define a new role inside the scope of this stage
@@ -42,13 +40,9 @@ module MoulinRouge
     end
     
     class << self
-      # Holds the main container
+      # The instance of the main container, if don't exist create one
       def main
-        @@main ||= nil
-      end
-      # Set the main container
-      def main=(instance)
-        @@main = instance
+        @@main ||= self.new(:main)
       end
     end
   end

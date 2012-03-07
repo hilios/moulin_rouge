@@ -11,9 +11,10 @@ module MoulinRouge
       yield configuration if block_given?
     end
     
-    # Create the Root stage and execute all permission files
+    # Create the main stage and execute all permission files
     def self.run
-      Stage.new(:main) do
+      MoulinRouge::Stage.main.instance_eval do
+        role(:test)
         Dir[MoulinRouge.configuration.path].each { |f| require f }
       end
     end
