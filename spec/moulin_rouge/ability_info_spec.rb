@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe MoulinRouge::Ability do
-  let(:auth) { MoulinRouge::Ability.new([:arg], Proc.new { :block }) }
+describe MoulinRouge::AbilityInfo do
+  let(:auth) { MoulinRouge::AbilityInfo.new([:arg], Proc.new { :block }) }
   
   describe "#args" do
     it "is an attribute" do

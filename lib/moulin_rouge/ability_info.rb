@@ -1,5 +1,5 @@
 module MoulinRouge
-  class Ability
+  class AbilityInfo
     attr_accessor :args, :block
     def initialize(args, block)
       @args, @block = args, block

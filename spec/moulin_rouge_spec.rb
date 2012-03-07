@@ -44,7 +44,7 @@ describe MoulinRouge do
       end
       
       it "evaluate all permissions in the path" do
-        MoulinRouge::Permission.list.should_not be_empty
+        MoulinRouge::Group.list.should_not be_empty
       end
     end
   end
