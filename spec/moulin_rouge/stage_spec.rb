@@ -72,13 +72,19 @@ describe MoulinRouge::Stage do
   end
   
   describe "#can" do
+    let(:args) { [:one, :two] }
+    let(:proc) { Proc.new { :block } }
+    
     it "stores the given arguments and block into abilities array" do
       stage.can(:do, :something) { :block }
       stage.abilities.should_not be_empty
       stage.abilities.first.should be_a(MoulinRouge::AbilityInfo)
-      stage.abilities.first.block.should be_a(Proc)
+      # Evaluate the class of the arguments and block
       stage.abilities.first.args.should be_a(Array)
+      stage.abilities.first.block.should be_a(Proc)
+      # Just check the value
       stage.abilities.first.args.should eq([:do, :something])
+      stage.abilities.first.block.call.should be(:block)
     end
     
     it "stores nil on block attribute when no block is given" do

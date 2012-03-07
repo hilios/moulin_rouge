@@ -33,7 +33,7 @@ module MoulinRouge
     
     # Save the given parameters to the authorizations list
     def can(*args, &block)
-      @abilities << AbilityInfo.new(args, block)
+      @abilities << AbilityInfo.new(*args, &block)
     end
 
     # Returns an array with all childrens
