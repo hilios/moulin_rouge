@@ -13,9 +13,6 @@ module MoulinRouge
     
     # Create the main stage and execute all permission files
     def self.run
-      MoulinRouge::Stage.main.instance_eval do
-        role(:test)
-        Dir[MoulinRouge.configuration.path].each { |f| require f }
-      end
+      MoulinRouge::Stage.main.import(MoulinRouge.configuration.path)
     end
 end

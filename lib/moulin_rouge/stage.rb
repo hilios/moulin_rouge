@@ -19,8 +19,13 @@ module MoulinRouge
     
     # Define a new role inside the scope of this stage
     def role(name, &block)
-      childrens << self.class.new(name, self, &block)
-      childrens.last
+      if children = find(name)
+        children.instance_eval(&block)
+        children
+      else
+        childrens << self.class.new(name, self, &block)
+        childrens.last
+      end
     end
     alias :group :role
     
@@ -37,6 +42,17 @@ module MoulinRouge
     # Returns an array with all authorizations declared on this stage
     def abilities
       @abilities ||= []
+    end
+    
+    # Execute all files in the given path in the class scope
+    def import(path)
+      Dir[path].each { |file| eval(File.open(file).read) }
+    end
+    
+    # Returns true if the name and parent of both object are the same and false otherwise
+    def find(name)
+      childrens.each { |children| return children if children.name == name }
+     return nil
     end
     
     class << self

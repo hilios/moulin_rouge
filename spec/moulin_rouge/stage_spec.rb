@@ -55,6 +55,20 @@ describe MoulinRouge::Stage do
       stage.role(:name)
       stage.childrens.should_not be_empty
     end
+    
+    it "appends the content if the name is already present" do
+      stage.role(:test) { can :do, :this }
+      # Create one children
+      stage.childrens.length.should be(1)
+      # And one ability
+      stage.childrens.first.abilities.length.should be(1)
+      
+      stage.role(:test) { can :do, :this }
+      # Don't create other children
+      stage.childrens.length.should be(1)
+      # Append the new ability
+      stage.childrens.first.abilities.length.should be(2)
+    end
   end
   
   describe "#can" do
@@ -76,6 +90,26 @@ describe MoulinRouge::Stage do
       stage.abilities.should be_empty
       stage.can(:do, :something)
       stage.abilities.should_not be_empty
+    end
+  end
+  
+  require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+
+  describe "#import" do
+    let(:files_opened) { [] }
+    
+    it "glob all files in the given path and evaluate their content in the class scope" do
+      File.stub(:open) { |file| files_opened << file; double("file", :read => "")  }
+      stage.import(MoulinRouge.configuration.path)
+      files_opened.should include(*Dir[MoulinRouge.configuration.path])
+    end
+  end
+  
+  describe "#find" do
+    it "returns the instance of the stage if there is children with this name and nil otherwise" do
+      role = stage.role(:test)
+      stage.find(:test).should be(role)
+      stage.find(:bad).should be_nil
     end
   end
   

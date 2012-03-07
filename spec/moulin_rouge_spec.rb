@@ -20,25 +20,17 @@ describe MoulinRouge do
   end
   
   describe "#run" do
-
     context "(with stubs)" do
-      let(:files) { Dir[MoulinRouge.configuration.path] } # Glob all files in the path
-      let(:required_files) { [] }
-      
-      before(:each) do
-        MoulinRouge::Stage.main.stub(:require) { |file| required_files << file }
+      it "call import the config path on the main stage" do
+        MoulinRouge::Stage.main.should_receive(:import).with(MoulinRouge.configuration.path).once
         MoulinRouge.run
-      end
-
-      it "creates the main cointainer and require all files on config path" do
-        required_files.should include(*files)
         MoulinRouge::Stage.main.should_not be_nil
       end
     end
     
     context "(without stubs)" do
       it "evaluate all permissions in the path" do
-        pending
+        
         MoulinRouge.run
         MoulinRouge::Stage.main.childrens.should_not be_empty
       end
