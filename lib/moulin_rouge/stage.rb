@@ -5,7 +5,7 @@ module MoulinRouge
     attr_reader :name
     
     # Returns a instance of the parent stage.
-    # When nil this is the root stage.
+    # When nil this is the main stage.
     attr_reader :parent
     
     # Creates a new stage and evaluate the given block
@@ -16,7 +16,7 @@ module MoulinRouge
       @abilities = []
       instance_eval(&block) if block_given?
       # Add this instance to the list inside singleton object
-      self.class.root = self if parent.nil?
+      self.class.main = self if parent.nil?
     end
     
     # Define a new role inside the scope of this stage
@@ -42,13 +42,13 @@ module MoulinRouge
     end
     
     class << self
-      # Holds the root container
-      def root
-        @@root ||= nil
+      # Holds the main container
+      def main
+        @@main ||= nil
       end
-      # Set the root container
-      def root=(instance)
-        @@root = instance
+      # Set the main container
+      def main=(instance)
+        @@main = instance
       end
     end
   end

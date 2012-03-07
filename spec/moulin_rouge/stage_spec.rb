@@ -20,7 +20,7 @@ describe MoulinRouge::Stage do
   end
   
   describe "#parent" do
-    it "returns nil when for root" do
+    it "returns nil when for main" do
       stage.parent.should be_nil
     end
     
@@ -80,10 +80,10 @@ describe MoulinRouge::Stage do
   end
   
   context "self" do
-    describe "#root" do
-      it "holds the root MoulinRouge::Groups instances" do
+    describe "#main" do
+      it "holds the main MoulinRouge::Groups instances" do
         stage
-        MoulinRouge::Stage.root.should be(stage)
+        MoulinRouge::Stage.main.should be(stage)
       end
     end
   end

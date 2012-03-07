@@ -2,7 +2,7 @@ require 'rbconfig'
 
 module MoulinRouge
   class Configuration
-    attr_accessor :path, :root
+    attr_accessor :path
     
     def initialize
       @path = "app/permissions/**/*.rb"

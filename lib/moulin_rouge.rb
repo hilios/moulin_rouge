@@ -13,7 +13,7 @@ module MoulinRouge
     
     # Create the Root stage and execute all permission files
     def self.run
-      Stage.new(:root) do
+      Stage.new(:main) do
         Dir[MoulinRouge.configuration.path].each { |f| require f }
       end
     end

@@ -30,7 +30,7 @@ describe MoulinRouge do
         MoulinRouge::Stage.any_instance.stub(:required_files) { required_files }
       end
 
-      it "creates the root cointainer and require all files on config path" do
+      it "creates the main cointainer and require all files on config path" do
         pending
         # runner.should_receive(:require).at_least(files.length)
       end
@@ -47,7 +47,7 @@ describe MoulinRouge do
       
       it "evaluate all permissions in the path" do
         pending
-        # MoulinRouge::Stage.root.childrens.should_not be_empty
+        # MoulinRouge::Stage.main.childrens.should_not be_empty
       end
     end
   end
