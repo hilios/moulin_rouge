@@ -1,8 +1,6 @@
 Dir[File.expand_path("model_shifter/**/*.rb", File.dirname(__FILE__))].each {|f| require f;}
 
 module MoulinRouge
-    class FileNotFound < Exception; end
-  
     # Returns the global Configuration object.
     def self.configuration
       @configuration ||= MoulinRouge::Configuration.new
@@ -13,11 +11,10 @@ module MoulinRouge
       yield configuration if block_given?
     end
     
-    # Require the DSL and glob the path and require all permissions
+    # Create the Root stage and execute all permission files
     def self.run
-      require 'moulin_rouge/dsl'
-      Dir[MoulinRouge.configuration.path].each do |f| 
-        raise FileNotFound unless require f
+      Stage.new(:root) do
+        Dir[MoulinRouge.configuration.path].each { |f| require f }
       end
     end
 end
