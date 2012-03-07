@@ -31,6 +31,10 @@ module MoulinRouge
     def can(*args, &block)
       @abilities << AbilityInfo.new(args, block)
     end
+
+    def childrens
+      @childrens ||= []
+    end
     
     class << self
       # Holds a list with every object created

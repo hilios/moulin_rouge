@@ -6,6 +6,7 @@ describe MoulinRouge::Group do
   describe "#initialize" do
     it "evaluate the groups and authorizations to the class scope" do
       group = MoulinRouge::Group.new(:scope) do
+        self.class.should == MoulinRouge::Group
         can :do, :something
         role :for
       end
@@ -27,6 +28,12 @@ describe MoulinRouge::Group do
       another = MoulinRouge::Group.new(:another, group)
       another.parent.should be_instance_of(MoulinRouge::Group)
       another.parent.should be(group)
+    end
+  end
+
+  describe "#childrens" do
+    it "returns an array" do
+      group.childrens.should be_instance_of(Array)
     end
   end
   
