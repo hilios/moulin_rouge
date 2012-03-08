@@ -80,6 +80,8 @@ role :authors do
   end
 end
 ```
+
+Note that the `can` method is the *same* for setting the permissions in CanCan, and will be passed as they are on the Ability class. See [Defining Abilities](https://github.com/ryanb/cancan/wiki/defining-abilities) for more information on what you `can` do.
   
 ### Nested Roles ###
 
@@ -117,6 +119,23 @@ group :managers do
 end
 ```
 
+### Extending ###
+
+Many times you want to extend a group from another one, for this cases the `include` method is provided with such functionality, note that *all* your abilities and nested roles will be append to your role / group, also, you should provide the full permission name.
+
+```ruby
+group :marketing do
+  role :admin do
+    can :do, :something
+  end
+end
+
+role :super do
+  include :marketing_admin
+end
+```
+
+
 Inside your model
 -----------------
 
@@ -134,6 +153,8 @@ user = User.new
 user.roles            # => MoulinRouge::Role::Array[]
 user.roles += :admin
 user.roles            # => [:admin]
+user.role? :admin     # => true
+user.role? :marketing # => false
 user.roles -= :admin
 user.roles            # => []
 user.roles_list       # => [:admin, :marketing, :managers, ...]
@@ -168,6 +189,18 @@ user.role_list  # => [:manager_marketing, :manager_project]
 ```
 
 And so on.
+
+Goodies
+-------
+
+For those who like I dislikes the `load_and_authorize_resource` method from CanCan, here is provided a cleaner and more flexible solution through `ActionController::Responder`
+
+
+
+More about the `Responder`:
+
+*   http://blog.plataformatec.com.br/2009/08/embracing-rest-with-mind-body-and-soul/
+*   http://archives.ryandaigle.com/articles/2009/8/6/what-s-new-in-edge-rails-cleaner-restful-controllers-w-respond_with/
 
 Credits
 =======
