@@ -22,24 +22,18 @@ describe MoulinRouge do
 
     describe "#run!" do
       context "(with stubs)" do
-        it "call import the config path on the main stage" do
-          MoulinRouge::Stage.main.should_receive(:import).with(MoulinRouge.configuration.path).once
+        it "call import the config path on the main permission" do
+          MoulinRouge::Permission.main.should_receive(:import).with(MoulinRouge.configuration.path).once
           MoulinRouge.run!
-          MoulinRouge::Stage.main.should_not be_nil
+          MoulinRouge::Permission.main.should_not be_nil
         end
       end
 
       context "(without stubs)" do
         it "evaluate all permissions in the path" do
           MoulinRouge.run!
-          MoulinRouge::Stage.main.childrens.should_not be_empty
+          MoulinRouge::Permission.main.childrens.should_not be_empty
         end
-      end
-    end
-
-    describe "#roles_list" do
-      it "returns an array" do
-        MoulinRouge.roles_list.should be_a(Array)
       end
     end
   end

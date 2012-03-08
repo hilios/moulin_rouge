@@ -11,13 +11,8 @@ module MoulinRouge
       yield configuration if block_given?
     end
     
-    # Create the main stage and execute all permission files
+    # Create the main permission and execute all permission files
     def self.run!
-      MoulinRouge::Stage.main.import(MoulinRouge.configuration.path)
-    end
-    
-    # Returns an array with the name of all roles created
-    def self.roles_list
-      @@roles_list ||= []
+      MoulinRouge::Permission.main.import(MoulinRouge.configuration.path)
     end
 end
