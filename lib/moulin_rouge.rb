@@ -12,7 +12,12 @@ module MoulinRouge
     end
     
     # Create the main stage and execute all permission files
-    def self.run
+    def self.run!
       MoulinRouge::Stage.main.import(MoulinRouge.configuration.path)
+    end
+    
+    # Returns an array with the name of all roles created
+    def self.roles_list
+      @@roles_list ||= []
     end
 end

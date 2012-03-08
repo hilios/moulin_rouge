@@ -11,6 +11,13 @@ describe MoulinRouge::Stage do
         role :for
       end
     end
+    
+    it "append the role name to the role_list array unless the main one" do
+      MoulinRouge::Stage.new(:main) do
+        role(:one)
+      end
+      MoulinRouge.roles_list.should include(:one)
+    end
   end
   
   describe "#name" do
@@ -99,8 +106,6 @@ describe MoulinRouge::Stage do
     end
   end
   
-  require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-
   describe "#import" do
     let(:files_opened) { [] }
     
@@ -144,6 +149,19 @@ describe MoulinRouge::Stage do
       role = stage.role(:test)
       stage.find(:test).should be(role)
       stage.find(:bad).should be_nil
+    end
+  end
+  
+  describe "#to_sym" do
+    it "returns an symbol containing the name with the parents separeted by a underscore" do
+      first_children, second_children = nil
+      MoulinRouge::Stage.new(:main) do
+        first_children = role(:one) do
+          second_children = role(:two)
+        end
+      end
+      first_children.to_sym.should be(:one)
+      second_children.to_sym.should be(:one_two)
     end
   end
   

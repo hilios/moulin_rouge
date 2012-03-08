@@ -15,6 +15,8 @@ module MoulinRouge
       @parent = parent
       @abilities = []
       instance_eval(&block) if block_given?
+      # Append this hole
+      MoulinRouge.roles_list << to_sym unless parent.nil?
     end
     
     # Define a new role inside the scope of this stage. If exists a role
@@ -55,6 +57,20 @@ module MoulinRouge
     def find(name)
       childrens.each { |children| return children if children.name == name }
      return nil
+    end
+    
+    # Returns a symbol with the name appended with the parents separeted by a underscore
+    def to_sym
+      unless @to_sym
+        name, parent = [self.name.to_s], self.parent
+        while not parent.parent.nil?
+          name.unshift(parent.name.to_s)
+          parent = parent.parent
+        end
+        # Caches the result
+        @to_sym = name.join('_').to_sym
+      end
+      @to_sym
     end
     
     class << self
