@@ -1,11 +1,9 @@
 Moulin Rouge
 ============
 
-For those who don't know, Mouling Rouge (The Red Windmill) is a cabaret in Paris best know as the birthplace on modern [CanCan](https://github.com/ryanb/cancan) second to [Wikipedia](http://en.wikipedia.org/wiki/Moulin_Rouge).
+In simple words **Moulin Rouge** is a DSL to declare and manage permissions and groups of access, and a wrapper to the [CanCan](https://github.com/ryanb/cancan) authorization system. It will help organize and declare your permissions with plain ruby code, and manage this permissions inside your model.
 
-But what you really wants to know, is that **MR** is a simple and organized solution to include a role system into your application and a helper to manage authorizations with [CanCan](https://github.com/ryanb/cancan). It's heavily based on the KISS concept and on the bitmask scheme proposed by Ryan Bates with some of the drawbacks solved to your convinience.
-
-**Moulin Rouge** act has a DSL to declare and manage permissions and groups os access, further in this text there are examples to show you how to do it.
+There are a bunch of examples bellow to show you how to implement.
 
 Installation
 ------------
@@ -26,7 +24,7 @@ Generate a permission file:
 
     rails g moulinrouge:permission <name>
     
-Add your permissions to newly create file:
+Add your permissions to newly created file:
   
 ```ruby
 role :name do
@@ -34,7 +32,7 @@ role :name do
 end
 ```
   
-Finally include to your model that will have role
+Finally include to your model that will have roles:
 
 ```ruby
 class User < ActiveRecord::Base
@@ -46,7 +44,7 @@ end
 Usage
 -----
 
-First of all, you have to accept that the role registering belongs to the ruby code. Organizing this ruby files with the permission it's a really important point to any serious application.
+First of all, you have to accept that the role registering belongs to the ruby code. Organizing this ruby files  it's a really important issue to any large application.
 
 When you run:
 
@@ -83,27 +81,9 @@ end
 
 Note that the `can` method is the *same* for setting the permissions in CanCan, and will be passed as they are on the Ability class. See [Defining Abilities](https://github.com/ryanb/cancan/wiki/defining-abilities) for more information on what you `can` do.
   
-### Nested Roles ###
-
-You can go even further and nest all your rules, of course the top ones will embed all nested one, but it won't override definitions.
-  
-```ruby
-role :marketing do
-  can :manage, :all
-
-  role :salesman do
-    can :manage, Proposal
-
-    role :representatives do
-      can :read, Proposal
-    end
-  end
-end
-```
-  
 ### Groups ###
   
-A group is an easy way to organize your permissions, no matter where file the definition is. They are automatically nested together.
+A group is an easy way to organize your permissions, no matter where file the definition is. All groups with the same name, will have their abilities and permissions nested together.
 
 ```ruby
 group :managers do
@@ -119,9 +99,35 @@ group :managers do
 end
 ```
 
+### Nested roles ###
+
+You can go even further and nest all your rules, the parent will have the abilities defined in their children, but the children won't have the parent ones.
+  
+```ruby
+role :marketing do
+  can :manage, :all
+
+  group :salesman do
+    role :representatives do
+      can :read, Proposal
+    end
+  end
+end
+```
+
+To avoid name conflicts, whenever you have a nested roles or groups, their name on the `roles_list` will be prefixed with the parent name separeted by a `_` underscore.
+
+Following the example above, will generate three different roles:
+
+```ruby
+model.roles_list  # => [:marketing, :marketing_salesman, :marketing_salesman_representatives]
+```
+
+And so on.
+
 ### Extending ###
 
-Many times you want to extend a group from another one, for this cases the `include` method is provided with such functionality, note that *all* your abilities and nested roles will be append to your role / group, also, you should provide the full permission name.
+Many times you want to extend a group from another one, in this cases the `include` method will provided such functionality, note that *all* your abilities and nested roles will be append to your target, also, you should provide the full permission name.
 
 ```ruby
 group :marketing do
@@ -134,7 +140,6 @@ role :super do
   include :marketing_admin
 end
 ```
-
 
 Inside your model
 -----------------
@@ -160,42 +165,39 @@ user.roles            # => []
 user.roles_list       # => [:admin, :marketing, :managers, ...]
 ```
 
-Nested roles names
-------------------
+Strategy
+--------
 
-To avoid name conflicts, whenever you have a nested role or group (at this point you should know that they have no difference) the name on the role list will be prefixed with the parent name separeted by a `_` underscore.
+This plugin relies on the [bitmask](http://en.wikipedia.org/wiki/Mask_(computing)) strategy to allow has_many roles functionality. The mais problem with this approach, is the fact you can't change the order of itens in the permission array, this is no good.
 
-If you have a permission like this:
-
-```ruby
-group :manager do
-  role :marketing do
-    can :manage, Sales
-    can :manage, Proposals
-    ...
-  end
-  
-  role :project do
-    can :manage, Projects
-    ...
-  end
-end
-```
-
-The role name in the `role_list` will be:
-
-```ruby
-user.role_list  # => [:manager_marketing, :manager_project]
-```
-
-And so on.
+#### Persistency #####
 
 Goodies
 -------
 
-For those who like I dislikes the `load_and_authorize_resource` method from CanCan, here is provided a cleaner and more flexible solution through `ActionController::Responder`
+For those who like I dislikes the `load_and_authorize_resource` method from CanCan, here is provided a cleaner and more flexible solution through `ActionController::Responder`, the `MoulinRouge::CanCan::Responder` bellow there are instruction to activate them.
 
+Create the file `lib/application_responder.rb` with the following:
 
+```ruby
+require 'moulin_rouge/cancan/responder'
+
+class ApplicationResponder < ActionController::Responder
+  include MoulinRouge::CanCan::Responder
+end
+```
+
+And on your `application_controller.rb` just add the responder:
+
+```ruby
+require 'application_responder'
+
+class ApplicationController < ActionController::Base
+  protect_from_forgery
+  self.responder = ApplicationResponder
+  ...
+end
+```
 
 More about the `Responder`:
 
@@ -208,3 +210,7 @@ Credits
 *   [Troles](https://github.com/kristianmandrup/trole)
 *   [CanTango](https://github.com/kristianmandrup/cantango)
 *   [Declarative Authorization](https://github.com/stffn/declarative_authorization)
+
+### A little of history ###
+
+Mouling Rouge is a cabaret in Paris best know as the birthplace on modern [CanCan](https://github.com/ryanb/cancan) second to [Wikipedia](http://en.wikipedia.org/wiki/Moulin_Rouge).
