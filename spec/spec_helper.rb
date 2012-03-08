@@ -14,10 +14,10 @@ def permission_file
 end
 
 def create_permission(content)
-  File.open(permission_file, 'w') do |f|
-    f.write content
-    f.close
-  end
+  f = File.open(permission_file, 'w') do |f|
+  f.write content
+ensure 
+  f.close
 end
 
 RSpec.configure do |config|
