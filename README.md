@@ -116,7 +116,59 @@ group :managers do
   end
 end
 ```
+
+Inside your model
+-----------------
+
+After defining all your roles, groups and abilities for your application, it's time to assign them to your model. You just need include the `MoulinRouge::Role::Base` to any class and it's done.
+
+```ruby
+class User < ActiveRecord::Base
+  include MoulinRouge::RoleSystem
+  ...
+end
+```
+
+```ruby
+user = User.new
+user.roles            # => MoulinRouge::Role::Array[]
+user.roles += :admin
+user.roles            # => [:admin]
+user.roles -= :admin
+user.roles            # => []
+user.roles_list       # => [:admin, :marketing, :managers, ...]
+```
+
+Nested roles names
+------------------
+
+To avoid name conflicts, whenever you have a nested role or group (at this point you should know that they have no difference) the name on the role list will be prefixed with the parent name separeted by a `_` underscore.
+
+If you have a permission like this:
+
+```ruby
+group :manager do
+  role :marketing do
+    can :manage, Sales
+    can :manage, Proposals
+    ...
+  end
   
+  role :project do
+    can :manage, Projects
+    ...
+  end
+end
+```
+
+The role name in the `role_list` will be:
+
+```ruby
+user.role_list  # => [:manager_marketing, :manager_project]
+```
+
+And so on.
+
 Credits
 =======
 

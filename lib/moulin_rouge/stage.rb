@@ -15,7 +15,7 @@ module MoulinRouge
       @parent = parent
       @abilities = []
       instance_eval(&block) if block_given?
-      # Append this hole
+      # Append this role to the role list name
       MoulinRouge.roles_list << to_sym unless parent.nil?
     end
     
