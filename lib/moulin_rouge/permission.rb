@@ -87,8 +87,8 @@ module MoulinRouge
         @@main ||= self.new(:main)
       end
       # Returns an array with the name of all roles created
-      def names
-        @@names ||= []
+      def list
+        @@list ||= []
       end
 
       # Returns an hash with all permissions defined
@@ -96,11 +96,11 @@ module MoulinRouge
         @@all ||= {}
       end
 
-      # Stores the instance on the permissions hash and add the name to the roles list
+      # Stores the instance on the all hash and add the name to the list
       def add(instance)
         name = instance.name
         self.all[name] = instance
-        self.names << name unless self.names.include?(name)
+        self.list << name unless self.list.include?(name)
       end
     end
   end

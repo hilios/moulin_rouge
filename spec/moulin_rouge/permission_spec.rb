@@ -17,7 +17,7 @@ describe MoulinRouge::Permission do
         role(:one)
       end
       MoulinRouge::Permission.all.should include(:one)
-      MoulinRouge::Permission.names.should include(:one)
+      MoulinRouge::Permission.list.should include(:one)
     end
   end
   
@@ -198,9 +198,9 @@ describe MoulinRouge::Permission do
       end
     end
 
-    describe "#names" do
+    describe "#list" do
       it "returns an array" do
-        MoulinRouge::Permission.names.should be_a(Array)
+        MoulinRouge::Permission.list.should be_a(Array)
       end
     end
 
@@ -220,9 +220,9 @@ describe MoulinRouge::Permission do
     describe "#add" do
       it "should append the object instance on Permission.all and Permission.names" do
         object = double(:name => :foo)
-        MoulinRouge::Permission.stub(:all)    { @all    ||= double()   }
-        MoulinRouge::Permission.stub(:names)  { @names  ||= double(:include? => false) }
-        MoulinRouge::Permission.names.should_receive(:'<<').with(object.name)
+        MoulinRouge::Permission.stub(:all)    { @all  ||= double()   }
+        MoulinRouge::Permission.stub(:list)   { @list ||= double(:include? => false) }
+        MoulinRouge::Permission.list.should_receive(:'<<').with(object.name)
         MoulinRouge::Permission.all.should_receive(:'[]=').with(object.name, object)
         MoulinRouge::Permission.add(object)
       end
