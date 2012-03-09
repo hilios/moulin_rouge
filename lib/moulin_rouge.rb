@@ -11,8 +11,11 @@ module MoulinRouge
       yield configuration if block_given?
     end
     
-    # Create the main permission and execute all permission files
+    # Create the main permission, import all permission files and
+    # define the Ability class require for CanCan
     def self.run!
       MoulinRouge::Permission.main.import(MoulinRouge.configuration.path)
+      # Create the ability class
+      Object.const_set 'Ability', Class.new(MoulinRouge::CanCan::Ability) unless Object.const_defined? 'Ability'
     end
 end

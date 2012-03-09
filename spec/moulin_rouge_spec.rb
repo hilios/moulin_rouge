@@ -35,6 +35,12 @@ describe MoulinRouge do
           MoulinRouge::Permission.main.childrens.should_not be_empty
         end
       end
+
+      it "creates a class named Ability inherited from MoulinRouge::CanCan::Ability" do
+        MoulinRouge.run!
+        Object.const_get('Ability').should_not be_nil
+        Object.const_get('Ability').ancestors.should include(MoulinRouge::CanCan::Ability)
+      end
     end
   end
 end
