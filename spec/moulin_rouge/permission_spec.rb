@@ -34,14 +34,14 @@ describe MoulinRouge::Permission do
     
     it "returns a instance of the MoulinRouge::Permission" do
       another = MoulinRouge::Permission.new(:another, permission)
-      another.parent.should be_instance_of(MoulinRouge::Permission)
+      another.parent.should be_a(MoulinRouge::Permission)
       another.parent.should be(permission)
     end
   end
 
   describe "#childrens" do
     it "returns an array" do
-      permission.childrens.should be_instance_of(Array)
+      permission.childrens.should be_an(Array)
     end
   end
 
@@ -62,7 +62,7 @@ describe MoulinRouge::Permission do
       two = one.role(:two) do
         can :do, :two
       end
-      permission.collect_abilities.should be_a(Array)
+      permission.collect_abilities.should be_an(Array)
       permission.collect_abilities.length.should be(3)
       one.collect_abilities.length.should be(2)
       two.collect_abilities.length.should be(1)
@@ -72,7 +72,7 @@ describe MoulinRouge::Permission do
   describe "#role" do
     it "returns a new permission with the parent setted to the class that are calling" do
       role = permission.role(:test)
-      role.should be_instance_of(MoulinRouge::Permission)
+      role.should be_a(MoulinRouge::Permission)
       role.parent.should be(permission)
     end
 

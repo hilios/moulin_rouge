@@ -34,9 +34,10 @@ module MoulinRouge
     end
     alias :group :role
     
-    # Save the given parameters to the authorizations list
+    # Add the given parameters to the authorizations list
     def can(*args, &block)
-      @abilities << AbilityInfo.new(*args, &block)
+      abilities << AbilityInfo.new(*args, &block)
+      abilities.last
     end
 
     # Returns an array with all childrens
@@ -106,6 +107,11 @@ module MoulinRouge
         name = instance.name
         self.all[name] = instance
         self.list << name unless self.list.include?(name)
+      end
+
+      # Reset all constants
+      def reset! #:nodoc:
+        @@main, @@list, @@all = nil
       end
     end
   end
