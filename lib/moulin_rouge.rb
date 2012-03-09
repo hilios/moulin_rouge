@@ -1,4 +1,4 @@
-# Dir[File.expand_path("moulin_rouge/**/*.rb", File.dirname(__FILE__))].each {|f| require f;}
+Dir[File.expand_path("moulin_rouge/**/*.rb", File.dirname(__FILE__))].each {|f| require f;}
 
 module MoulinRouge
     # Returns the global Configuration object.
