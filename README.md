@@ -1,7 +1,7 @@
 Moulin Rouge
 ============
 
-In simple words **Moulin Rouge** is a DSL to declare and manage permissions and groups of access, and a wrapper to the [CanCan](https://github.com/ryanb/cancan) authorization system. It will help organize and declare your permissions with plain ruby code, and automaticaly creates the ability class required for cancan.
+**Moulin Rouge** is a DSL to manage your permissions and groups of access outside the [CanCan](https://github.com/ryanb/cancan) Ability class. It will help you organize and declare your permissions with many ruby files, that are automaticaly pushed to CanCan authorization system. It is also decoupled from the role system.
 
 There are a bunch of examples bellow to show you how to implement.
 
@@ -31,7 +31,8 @@ role :name do
   can :read, :something
 end
 ```
-Your user method should respond to `is?` by default, but you can configure that for your role system.
+
+By default your `current_user` method should respond to `is?`, but you can change this method to match your role system at the configuration.
 
 Usage
 -----
@@ -113,7 +114,8 @@ To avoid name conflicts, whenever you have a nested roles or groups, their name 
 Following the example above, will generate three distinct roles:
 
 ```ruby
-MoulinRouge::Permission.list  # => [:marketing, :marketing_salesman, :marketing_salesman_representatives]
+MoulinRouge::Permission.list  
+# => [:marketing, :marketing_salesman, :marketing_salesman_representatives]
 ```
 
 And so on.
@@ -173,7 +175,7 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-More about the `Responder`:
+More about the `Responder` class:
 
 *   http://blog.plataformatec.com.br/2009/08/embracing-rest-with-mind-body-and-soul/
 *   http://archives.ryandaigle.com/articles/2009/8/6/what-s-new-in-edge-rails-cleaner-restful-controllers-w-respond_with/
