@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["edson.hilios@gmail.com"]
   s.homepage    = "https://github.com/hilios/moulin_rouge"
   s.summary     = "Organize your CanCan permissions in many files."
-  s.description = "A wrapper to CanCan authorization system, allowing you to define permissions in many ruby files. Add new functionality to allowing you do more with less."
+  s.description = "A wrapper to CanCan authorization system, allowing you to define permissions in many ruby files. Add new functionality allowing you do more with less."
 
   s.files         = Dir["CHANGELOG.md", "MIT-LICENSE", "README.md", "lib/**/*", "init.rb"]
   s.test_files    = Dir["spec/**/*"]

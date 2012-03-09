@@ -42,5 +42,13 @@ describe MoulinRouge do
         Object.const_get('Ability').ancestors.should include(MoulinRouge::CanCan::Ability)
       end
     end
+
+    describe "#run?" do
+      it "returns true if the run! method was called and false oterwise" do
+        MoulinRouge.run?.should be_false
+        MoulinRouge.run!
+        MoulinRouge.run?.should be_true
+      end
+    end
   end
 end

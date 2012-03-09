@@ -14,8 +14,20 @@ module MoulinRouge
     # Create the main permission, import all permission files and
     # define the Ability class require for CanCan
     def self.run!
+      @@run = true
       MoulinRouge::Permission.main.import(MoulinRouge.configuration.path)
       # Create the ability class
       Object.const_set 'Ability', Class.new(MoulinRouge::CanCan::Ability) unless Object.const_defined? 'Ability'
+    end
+
+    # Returns true if the run! method was called and false oterwise
+    def self.run?
+      @@run ||= false
+    end
+
+    # Reset all constants
+    def self.reset! #:nodoc:
+      @@run = nil
+      MoulinRouge::Permission.reset!
     end
 end

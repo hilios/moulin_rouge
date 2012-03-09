@@ -33,7 +33,7 @@ RSpec.configure do |config|
   # Reset the MoulinRouge global variables
   # Remove the permission file created by the helper
   config.after(:each) do
-    MoulinRouge::Permission.reset!
+    MoulinRouge.reset!
     FileUtils.rm_rf(permission_file) if File.exists?(permission_file)
   end
 end
