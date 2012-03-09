@@ -1,7 +1,7 @@
 Moulin Rouge
 ============
 
-In simple words **Moulin Rouge** is a DSL to declare and manage permissions and groups of access, and a wrapper to the [CanCan](https://github.com/ryanb/cancan) authorization system. It will help organize and declare your permissions with plain ruby code, and manage this permissions inside your model.
+In simple words **Moulin Rouge** is a DSL to declare and manage permissions and groups of access, and a wrapper to the [CanCan](https://github.com/ryanb/cancan) authorization system. It will help organize and declare your permissions with plain ruby code, and automaticaly creates the ability class required for cancan.
 
 There are a bunch of examples bellow to show you how to implement.
 
@@ -31,15 +31,7 @@ role :name do
   can :read, :something
 end
 ```
-  
-Finally include to your model that will have roles:
-
-```ruby
-class User < ActiveRecord::Base
-  include MoulinRouge::RoleSystem
-  ...
-end
-```
+Your user method should respond to `is?` by default, but you can configure that for your role system.
 
 Usage
 -----
@@ -79,11 +71,12 @@ role :authors do
 end
 ```
 
-Note that the `can` method is the *same* for setting the permissions in CanCan, and will be passed as they are on the Ability class. See [Defining Abilities](https://github.com/ryanb/cancan/wiki/defining-abilities) for more information on what you `can` do.
+Note that the `can` method is the **same** for defining abilities in CanCan, and will be passed as they are on the Ability class. See [Defining Abilities](https://github.com/ryanb/cancan/wiki/defining-abilities) for more information on what you `can` do.
   
 ### Groups ###
   
-A group is an easy way to organize your permissions, no matter where file the definition is. All groups with the same name, will have their abilities and permissions nested together.
+A group is an easy way to organize your permissions, no matter where file the definition is. All groups with the same name, will have their abilities and permissions nested together. 
+*Quick note: There are no difference of functionality between roles and groups.*
 
 ```ruby
 group :managers do
@@ -115,12 +108,12 @@ role :marketing do
 end
 ```
 
-To avoid name conflicts, whenever you have a nested roles or groups, their name on the `roles_list` will be prefixed with the parent name separeted by a `_` underscore.
+To avoid name conflicts, whenever you have a nested roles or groups, their name will be prefixed with the parent name separeted by a `_` underscore just like they were namespaced.
 
-Following the example above, will generate three different roles:
+Following the example above, will generate three distinct roles:
 
 ```ruby
-model.roles_list  # => [:marketing, :marketing_salesman, :marketing_salesman_representatives]
+MoulinRouge::Permission.list  # => [:marketing, :marketing_salesman, :marketing_salesman_representatives]
 ```
 
 And so on.
@@ -141,36 +134,17 @@ role :super do
 end
 ```
 
-Inside your model
------------------
-
-After defining all your roles, groups and abilities for your application, it's time to assign them to your model. You just need include the `MoulinRouge::Role::Base` to any class and it's done.
+Configuration
+-------------
 
 ```ruby
-class User < ActiveRecord::Base
-  include MoulinRouge::RoleSystem
-  ...
+MoulinRoude.configure do |config|
+  # The search path for permissions
+  config.path = 'app/permissions/**/*.rb'
+  # The method that will test the permission
+  config.role_method = :'is?'
 end
 ```
-
-```ruby
-user = User.new
-user.roles            # => MoulinRouge::Role::Array[]
-user.roles += :admin
-user.roles            # => [:admin]
-user.role? :admin     # => true
-user.role? :marketing # => false
-user.roles -= :admin
-user.roles            # => []
-user.roles_list       # => [:admin, :marketing, :managers, ...]
-```
-
-Strategy
---------
-
-This plugin relies on the [bitmask](http://en.wikipedia.org/wiki/Mask_(computing)) strategy to allow has_many roles functionality. The mais problem with this approach, is the fact you can't change the order of itens in the permission array, this is no good.
-
-#### Persistency #####
 
 Goodies
 -------
