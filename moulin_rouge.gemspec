@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "Organize your CanCan permissions in many files."
   s.description = "A wrapper to CanCan authorization system, allowing you to define permissions in many ruby files. Add new functionality to allowing you do more with less."
 
-  s.files         = Dir["CHANGELOG.md", "MIT-LICENSE", "README.md", "lib/**/*"]
+  s.files         = Dir["CHANGELOG.md", "MIT-LICENSE", "README.md", "lib/**/*", "init.rb"]
   s.test_files    = Dir["spec/**/*"]
   s.require_paths = ["lib"]
 
