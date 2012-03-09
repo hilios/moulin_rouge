@@ -14,9 +14,9 @@ def permission_file
 end
 
 def create_permission(content)
-  f = File.open(permission_file, 'w') do |f|
-  f.write content
-ensure 
+  f = File.open(permission_file, 'w')
+  f.write(content)
+ensure
   f.close
 end
 
