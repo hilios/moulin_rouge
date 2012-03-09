@@ -9,15 +9,18 @@ Gem::Specification.new do |s|
   s.version     = MoulinRouge::VERSION
   s.authors     = ["Edson Hilios"]
   s.email       = ["edson.hilios@gmail.com"]
-  s.homepage    = "github.com/hilios/moulin_rouge"
-  s.summary     = "TODO: Summary of MoulinRouge."
-  s.description = "TODO: Description of MoulinRouge."
+  s.homepage    = "https://github.com/hilios/moulin_rouge"
+  s.summary     = "Organize your CanCan permissions in many files."
+  s.description = "A wrapper to CanCan authorization system, allowing you to define permissions in many ruby files. Add new functionality to allowing you do more with less."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files         = Dir["CHANGELOG.md", "MIT-LICENSE", "README.md", "lib/**/*"]
+  s.test_files    = Dir["spec/**/*"]
+  s.require_paths = ["lib"]
 
   s.add_dependency "cancan"
-  s.add_dependency "active_support"
 
+  s.add_development_dependency "rdoc"
   s.add_development_dependency "rspec"
   s.add_development_dependency "guard-rspec"
+  s.add_development_dependency "simplecov"
 end

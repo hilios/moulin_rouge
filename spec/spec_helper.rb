@@ -1,3 +1,6 @@
+require 'simplecov'
+SimpleCov.start
+
 require 'rubygems'
 require 'bundler/setup'
 require 'rspec'
@@ -27,8 +30,10 @@ RSpec.configure do |config|
       config.path = File.join(File.expand_path(File.dirname(__FILE__)), "/fixtures/**/*.rb")
     end
   end
+  # Reset the MoulinRouge global variables
   # Remove the permission file created by the helper
   config.after(:each) do
+    MoulinRouge::Permission.reset!
     FileUtils.rm_rf(permission_file) if File.exists?(permission_file)
   end
 end
