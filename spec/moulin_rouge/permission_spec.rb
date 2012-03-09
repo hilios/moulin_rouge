@@ -45,9 +45,27 @@ describe MoulinRouge::Permission do
     end
   end
 
-  describe "#authorizations" do
+  describe "#abilities" do
     it "returns an array" do
       permission.abilities.should be_a(Array)
+    end
+  end
+
+  describe "#collect_abilities" do
+    it "returns all abilities from self and their childrens" do
+      permission.can :do, :this
+      # First nested level
+      one = permission.role(:one) do
+        can :do, :one
+      end
+      # Second nested level
+      two = one.role(:two) do
+        can :do, :two
+      end
+      permission.collect_abilities.should be_a(Array)
+      permission.collect_abilities.length.should be(3)
+      one.collect_abilities.length.should be(2)
+      two.collect_abilities.length.should be(1)
     end
   end
   

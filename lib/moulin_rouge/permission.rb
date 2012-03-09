@@ -48,6 +48,11 @@ module MoulinRouge
     def abilities
       @abilities ||= []
     end
+
+    # Returns all abilities for this class from self and all his chidlrens
+    def collect_abilities
+      abilities.concat(childrens.map(&:collect_abilities).flatten).uniq
+    end
     
     # Execute all files in the given path in the class scope
     def import(path)
