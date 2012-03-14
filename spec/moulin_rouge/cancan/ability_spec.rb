@@ -9,8 +9,10 @@ describe MoulinRouge::CanCan::Ability do
   before(:each) do
     # The current permission will create the following abilities 
     # for each role because of nested rules:
+    #               => can(:do, :this) # for everybody
     # :first        => can(:do, :something_else), can(:do, :something)
     # :first_second => can(:do, :something_else)
+    permission.can(:do, :this)
     permission.role(:first) do
       can(:do, :something)
       role(:second) do
@@ -30,6 +32,8 @@ describe MoulinRouge::CanCan::Ability do
   end
 
   it "call can method for each ability of the permission" do
+    # First all permissions in main
+    MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(:do, :this).once
     # Please read the expetations explanation at before(:each) method
     MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(:do, :something).once
     MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(:do, :something_else).twice
