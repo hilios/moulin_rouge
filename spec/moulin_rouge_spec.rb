@@ -61,7 +61,7 @@ describe MoulinRouge do
 
     describe "#reload!" do
       it "Reset all permissions and load them again" do
-        MoulinRouge::Permission.should_receive(:reset!).at_least(:once)
+        MoulinRouge::Permission.should_receive(:reset!).twice # One in the before(:each) in spec_helper.rb and another here
         MoulinRouge.should_receive(:load!).once
         MoulinRouge.reload!
       end

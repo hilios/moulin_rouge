@@ -42,4 +42,10 @@ describe MoulinRouge::CanCan::Ability do
     end
     ability # Execute
   end
+
+  it "reloads all permissions when cache is set to false" do
+    MoulinRouge.configuration.cache = false
+    MoulinRouge.should_receive(:reset!).twice # One in the before(:each) in spec_helper.rb and another here
+    ability # Execute
+  end
 end
