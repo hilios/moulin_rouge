@@ -145,6 +145,8 @@ MoulinRoude.configure do |config|
   config.path = 'app/permissions/**/*.rb'
   # The method that will test the permission
   config.role_method = :'is?'
+  # Cache permissions
+  config.cache = Rails.env.production?
 end
 ```
 
