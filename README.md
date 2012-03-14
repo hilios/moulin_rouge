@@ -1,7 +1,7 @@
 Moulin Rouge
 ============
 
-**Moulin Rouge** is a DSL to manage your permissions and groups of access outside the [CanCan](https://github.com/ryanb/cancan) Ability class. It will help you organize and declare your permissions with many ruby files, that are automaticaly pushed to CanCan authorization system. It is also decoupled from the role system.
+**Moulin Rouge** is a DSL to manage your permissions and groups of access outside the [CanCan](https://github.com/ryanb/cancan) Ability class. It will help you organize and declare your permissions with has much ruby files you judge necessary, that are automatically pushed to CanCan authorization system. It is also decoupled from the role system.
 
 There are a bunch of examples bellow to show you how to implement.
 
@@ -140,13 +140,13 @@ Configuration
 -------------
 
 ```ruby
-MoulinRoude.configure do |config|
+MoulinRouge.configure do |config|
+  # Cache permissions
+  config.cache = Rails.env.production?
   # The search path for permissions
   config.path = 'app/permissions/**/*.rb'
   # The method that will test the permission
-  config.role_method = :'is?'
-  # Cache permissions
-  config.cache = Rails.env.production?
+  config.role_method = :is?
 end
 ```
 
