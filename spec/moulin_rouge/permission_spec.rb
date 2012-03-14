@@ -33,7 +33,7 @@ describe MoulinRouge::Permission do
     end
     
     it "returns a instance of the MoulinRouge::Permission" do
-      another = MoulinRouge::Permission.new(:another, permission)
+      another = MoulinRouge::Permission.new(:another, :parent => permission)
       another.parent.should be_a(MoulinRouge::Permission)
       another.parent.should be(permission)
     end
@@ -95,6 +95,10 @@ describe MoulinRouge::Permission do
       # ... and append the new ability
       permission.childrens.first.abilities.length.should be(2)
     end
+  end
+
+  describe "#group" do
+    
   end
   
   describe "#can" do

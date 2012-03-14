@@ -76,26 +76,38 @@ Note that the `can` method is the **same** for defining abilities in CanCan, and
   
 ### Groups ###
   
-A group is an easy way to organize your permissions, no matter where file the definition is. All groups with the same name, will have their abilities and permissions nested together. 
-*Quick note: There are no difference of functionality between roles and groups.*
+A group is an easy way to organize your permissions, no matter where file the definition is. All groups with the same name, will have their abilities and permissions nested together.
+
+The group will delegate all abilities defined into, to their childrens, so any children role or group  will have the abilities defined in the parent. Also the group is not an avaliable role, they only serve has namespaces.
 
 ```ruby
-group :managers do
-  role :marketing do
-    can :manage, Sales
-  end
-end
+group :marketing do
+  can :read, Dashboard
 
-group :managers do
-  role :project do
-    can :manage, Project
+  role :manager do
+    can :manage, Sales
+    can :manage, Proposals
+  end
+
+  role :salesman do
+    can :manage, Sales,     :user_id => user.id
+    can :manage, Proposal,  :user_id => user.id
   end
 end
 ```
 
+To avoid name conflicts, whenever you have a nested roles or groups, their name will be prefixed with the parent name separeted by a `_` underscore just like they were namespaced.
+
+Following the example above, will generate two roles:
+
+```ruby
+MoulinRouge::Permission.list  
+# => [:marketing_manager, :marketing_salesman]
+```
+
 ### Nested roles ###
 
-You can go even further and nest all your rules, the parent will have the abilities defined in their children, but the children won't have the parent ones.
+You can go even further and nest your rules, the parent one will have the abilities defined in their children, but the children won't have the parent ones.
   
 ```ruby
 role :marketing do
@@ -108,14 +120,12 @@ role :marketing do
   end
 end
 ```
+Following the example above, will generate two roles:
 
-To avoid name conflicts, whenever you have a nested roles or groups, their name will be prefixed with the parent name separeted by a `_` underscore just like they were namespaced.
-
-Following the example above, will generate three distinct roles:
 
 ```ruby
 MoulinRouge::Permission.list  
-# => [:marketing, :marketing_salesman, :marketing_salesman_representatives]
+# => [:marketing, :marketing_salesman_representatives]
 ```
 
 And so on.

@@ -8,31 +8,39 @@ module MoulinRouge
     # Returns a instance of the parent permission.
     # When nil this is the main permission.
     attr_reader :parent
+
+    # Returns true if it's a group or flase otherwise
+    attr_reader :is_a_group
     
     # Creates a new permission and evaluate the given block
     # with roles, groups and abilities on this scope.
-    def initialize(name, parent = nil, &block)
-      @singular_name = name
-      @parent = parent
-      @abilities = []
+    def initialize(name, options = {}, &block)
+      @singular_name  = name
+      @parent         = options.delete(:parent)
+      @is_group       = options.delete(:group)
+      @abilities      = []
       instance_eval(&block) if block_given?
       # Store this permission
       self.class.add(self) unless parent.nil?
     end
     
-    # Define a new role inside the scope of this permission. If exists a role
-    # with the same name evaluate the block inside them instead of create
-    # a new one
-    def role(name, &block)
+    # Define a new role inside this scope. If exists a role with the 
+    # same name evaluate the block inside them instead of create a new one
+    def role(name, options = {}, &block)
       if children = find(name)
         children.instance_eval(&block)
         children
       else
-        childrens << self.class.new(name, self, &block)
+        childrens << self.class.new(name, options.merge!({:parent => self}), &block)
         childrens.last
       end
     end
-    alias :group :role
+
+    # Define a group inside this scope
+    def group(name, options = {}, &block)
+      options.merge!({:group => true})
+      role(name, options, &block)
+    end
     
     # Add the given parameters to the authorizations list
     def can(*args, &block)
