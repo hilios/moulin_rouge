@@ -2,6 +2,7 @@ module MoulinRouge
   class PermissionNotFound < Exception; end
   # A wrapper to catch and store the DSL methods
   class Permission
+    CANCAN_METHODS = [:can, :cannot, :can?, :cannot?]
     # Returns a string with the given name
     attr_reader :singular_name
     
@@ -23,6 +24,14 @@ module MoulinRouge
       instance_eval(&block) if block_given?
       # Store this permission
       self.class.add(self) unless parent.nil? or @is_group
+    end
+
+    def method_missing(name, *args, &block)
+      if CANCAN_METHODS.include?(name)
+        store_method(name, *args, &block) 
+      else
+        super(name, *args, &block)
+      end
     end
     
     # Define a new role inside this scope. If exists a role with the 
@@ -49,8 +58,8 @@ module MoulinRouge
     end
 
     # Add the given parameters to the authorizations list
-    def can(*args, &block)
-      abilities << MoulinRouge::CanCan::Method.new(*args, &block)
+    def store_method(name, *args, &block)
+      abilities << MoulinRouge::CanCan::Method.new(name, *args, &block)
       abilities.last
     end
 

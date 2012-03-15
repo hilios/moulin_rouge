@@ -123,32 +123,46 @@ describe MoulinRouge::Permission do
       group.group?.should be_true
     end
   end
-  
-  describe "#can" do
+
+  describe "#method_missing" do
     let(:args) { [:one, :two] }
     let(:proc) { Proc.new { :block } }
-    
-    it "stores the given arguments and block into abilities array" do
-      permission.can(:do, :something) { :block }
-      permission.abilities.should_not be_empty
-      permission.abilities.first.should be_a(MoulinRouge::CanCan::Method)
-      # Evaluate the class of the arguments and block
-      permission.abilities.first.args.should be_a(Array)
-      permission.abilities.first.block.should be_a(Proc)
-      # Just check the value
-      permission.abilities.first.args.should eq([:do, :something])
-      permission.abilities.first.block.call.should be(:block)
-    end
-    
-    it "stores nil on block attribute when no block is given" do
-      permission.can(:do, :something)
-      permission.abilities.first.block.should be_nil
+
+    context "collect all cancan methods and store under abilities" do
+      MoulinRouge::Permission::CANCAN_METHODS.each do |method_name|
+        describe "##{method_name}" do
+          it "adds a new ability to this permission" do
+            permission.abilities.should be_empty
+            permission.send(method_name, *args, &proc)
+            permission.abilities.should_not be_empty
+          end
+
+          it "stores nil on block attribute when no block is given" do
+            permission.send(method_name, *args)
+            permission.abilities.first.block.should be_nil
+          end
+
+          it "stores the method" do
+            permission.abilities.should be_empty
+            permission.send(method_name, *args, &proc)
+            permission.abilities.should_not be_empty
+
+            method = permission.abilities.first
+            method.should be_a(MoulinRouge::CanCan::Method)
+            # Evaluate the class of the arguments and block
+            method.args.should be_a(Array)
+            method.block.should be_a(Proc)
+            # Just check the value
+            method.args.should eq(args)
+            method.block.call.should be(:block)
+          end
+        end
+      end
+      
     end
 
-    it "adds a new ability to this permission" do
-      permission.abilities.should be_empty
-      permission.can(:do, :something)
-      permission.abilities.should_not be_empty
+    it "raise an error if the method is not registered has a cancan method" do
+      lambda { permission.send(:abcdefg, *args, &proc) }.should raise_error(NoMethodError)
     end
   end
   

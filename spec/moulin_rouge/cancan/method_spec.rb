@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe MoulinRouge::CanCan::Method do
+  let(:name)    { :can }
   let(:args)    { [:one, :two] }
   let(:proc)    { Proc.new { :block } }
-  let(:method)  { MoulinRouge::CanCan::Method.new(*args, &proc) }
+  let(:method)  { MoulinRouge::CanCan::Method.new(name, *args, &proc) }
   
   describe "#args" do
     it "is a reader attribute" do
@@ -19,7 +20,7 @@ describe MoulinRouge::CanCan::Method do
 
   describe "#name" do
     it "is a reader attribute" do
-      method.name.should eq(:can)
+      method.name.should eq(name)
     end
   end
 
