@@ -12,12 +12,23 @@ describe MoulinRouge::Permission do
       end
     end
     
-    it "append the new instance to Permission.all and Permission.names" do
+    it "append the new instance to #all and #list if it's a role" do
       MoulinRouge::Permission.new(:main) do
         role(:one)
       end
       MoulinRouge::Permission.all.should include(:one)
       MoulinRouge::Permission.list.should include(:one)
+    end
+
+    it "inherits all abilities from parent if this is a group" do
+      role = nil
+      MoulinRouge::Permission.new(:main) do
+        group(:group) do
+          can :do, :this
+          role = role(:role)
+        end
+      end
+      role.abilities.first.args.should include(:do, :this)
     end
   end
   
@@ -51,7 +62,7 @@ describe MoulinRouge::Permission do
     end
   end
 
-  describe "#collect_abilities" do
+  describe "#inherithed_abilities" do
     it "returns all abilities from self and their childrens" do
       permission.can :do, :this
       # First nested level
@@ -62,10 +73,10 @@ describe MoulinRouge::Permission do
       two = one.role(:two) do
         can :do, :two
       end
-      permission.collect_abilities.should be_an(Array)
-      permission.collect_abilities.length.should be(3)
-      one.collect_abilities.length.should be(2)
-      two.collect_abilities.length.should be(1)
+      permission.inherithed_abilities.should be_an(Array)
+      permission.inherithed_abilities.length.should be(3)
+      one.inherithed_abilities.length.should be(2)
+      two.inherithed_abilities.length.should be(1)
     end
   end
   
@@ -98,7 +109,19 @@ describe MoulinRouge::Permission do
   end
 
   describe "#group" do
-    
+    it "not add the group name to permission list" do
+      permission.group(:test)
+      MoulinRouge::Permission.list.should_not include(:test)
+    end
+  end
+
+  describe "#group?" do
+    it "returns true if is a group and false otherwise" do
+      role = permission.role(:role)
+      group = permission.group(:group)
+      role.group?.should be_false
+      group.group?.should be_true
+    end
   end
   
   describe "#can" do
@@ -108,7 +131,7 @@ describe MoulinRouge::Permission do
     it "stores the given arguments and block into abilities array" do
       permission.can(:do, :something) { :block }
       permission.abilities.should_not be_empty
-      permission.abilities.first.should be_a(MoulinRouge::AbilityInfo)
+      permission.abilities.first.should be_a(MoulinRouge::CanCan::Method)
       # Evaluate the class of the arguments and block
       permission.abilities.first.args.should be_a(Array)
       permission.abilities.first.block.should be_a(Proc)

@@ -14,14 +14,15 @@ module MoulinRouge
     
     # Creates a new permission and evaluate the given block
     # with roles, groups and abilities on this scope.
+    # If the parent is a group append all their abilities to self
     def initialize(name, options = {}, &block)
       @singular_name  = name
       @parent         = options.delete(:parent)
       @is_group       = options.delete(:group)
-      @abilities      = []
+      abilities.concat(parent.abilities) if not parent.nil? and parent.group?
       instance_eval(&block) if block_given?
       # Store this permission
-      self.class.add(self) unless parent.nil?
+      self.class.add(self) unless parent.nil? or @is_group
     end
     
     # Define a new role inside this scope. If exists a role with the 
@@ -41,10 +42,15 @@ module MoulinRouge
       options.merge!({:group => true})
       role(name, options, &block)
     end
-    
+
+    # Returns true if is a group
+    def group?
+      @is_group
+    end
+
     # Add the given parameters to the authorizations list
     def can(*args, &block)
-      abilities << AbilityInfo.new(*args, &block)
+      abilities << MoulinRouge::CanCan::Method.new(*args, &block)
       abilities.last
     end
 
@@ -58,9 +64,10 @@ module MoulinRouge
       @abilities ||= []
     end
 
-    # Returns all abilities for this class from self and all his chidlrens
-    def collect_abilities
-      abilities.concat(childrens.map(&:collect_abilities).flatten).uniq
+    # Returns all abilities for this permission.
+    # If this is a group, grab the abilities from parent.
+    def inherithed_abilities
+      abilities.concat(childrens.map(&:inherithed_abilities).flatten).uniq
     end
     
     # Execute all files in the given path in the class scope
