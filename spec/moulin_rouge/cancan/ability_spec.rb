@@ -7,16 +7,26 @@ describe MoulinRouge::CanCan::Ability do
   let(:permission)  { MoulinRouge::Permission.main }
 
   before(:each) do
+    MoulinRouge::CanCan::Ability.any_instance.stub(:can) { true }
     # The current permission will create the following abilities 
     # for each role because of nested rules:
     #               => can(:do, :this) # for everybody
-    # :first        => can(:do, :something_else), can(:do, :something)
-    # :first_second => can(:do, :something_else)
+    # :role         => can(:do, :something)
+    # :role_nested  => can(:create, :something)
+    # :group_nested => can(:read, :something), can(:edit, :something)
     permission.can(:do, :this)
-    permission.role(:first) do
+    permission.role(:role) do
       can(:do, :something)
-      role(:second) do
-        can(:do, :something_else)
+
+      role(:nested) do
+        can(:create, :something)
+      end
+    end
+    permission.group(:group) do
+      can :read, :something
+
+      role(:nested) do
+        can :edit, :something
       end
     end
   end
@@ -26,8 +36,9 @@ describe MoulinRouge::CanCan::Ability do
   end
 
   it "call test_method in model for each permission" do
-    model.should_receive(test_method).with(:first)
-    model.should_receive(test_method).with(:first_second)
+    model.should_receive(test_method).with(:role)
+    model.should_receive(test_method).with(:role_nested)
+    model.should_receive(test_method).with(:group_nested)
     ability
   end
 
@@ -36,14 +47,20 @@ describe MoulinRouge::CanCan::Ability do
     MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(:do, :this).once
     # Please read the expetations explanation at before(:each) method
     MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(:do, :something).once
-    MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(:do, :something_else).twice
+    MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(:create, :something).once
+    MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(:read, :something).once
+    MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(:edit, :something).once
     ability # Execute
   end
 
-  it "should execute the can method with exactly the same arguments and block that was stored" do
-    permission.collect_abilities.each do |ability|
+  it "executes the can method with exactly the same arguments and block that was stored" do
+    # Concat permissions from main and from all defined classes
+    abilities = permission.abilities + MoulinRouge::Permission.all.values.map(&:abilities)
+    abilities.flatten.each do |ability|
       MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(*ability.args, &ability.block).at_least(:once)
     end
+    
+
     ability # Execute
   end
 
