@@ -159,6 +159,8 @@ MoulinRouge.configure do |config|
   config.path = 'app/permissions/**/*.rb'
   # The method that will test the permission
   config.role_method = :is?
+  # How you like to call the active user model
+  config.model_instance = :current_user
 end
 ```
 

@@ -27,11 +27,9 @@ module MoulinRouge
     end
 
     def method_missing(name, *args, &block)
-      if CANCAN_METHODS.include?(name)
-        store_method(name, *args, &block) 
-      else
-        super(name, *args, &block)
-      end
+      return store_method(name, *args, &block) if CANCAN_METHODS.include?(name)
+      return MoulinRouge::ModelDouble.new if MoulinRouge.configuration.model_instance == name
+      super(name, *args, &block)
     end
     
     # Define a new role inside this scope. If exists a role with the 
