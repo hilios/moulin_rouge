@@ -59,9 +59,16 @@ describe MoulinRouge do
       end
     end
 
+    describe "reset!" do
+      it "calls the reset! method on Permission" do
+        MoulinRouge::Permission.should_receive(:reset!).twice # One in the before(:each) in spec_helper.rb and another here
+        MoulinRouge.reset!
+      end
+    end
+
     describe "#reload!" do
       it "Reset all permissions and load them again" do
-        MoulinRouge::Permission.should_receive(:reset!).twice # One in the before(:each) in spec_helper.rb and another here
+        MoulinRouge.should_receive(:reset!).twice # One in the before(:each) in spec_helper.rb and another here
         MoulinRouge.should_receive(:load!).once
         MoulinRouge.reload!
       end

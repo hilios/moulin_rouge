@@ -286,5 +286,24 @@ describe MoulinRouge::Permission do
         MoulinRouge::Permission.add(object)
       end
     end
+
+    describe "#reset!" do
+      it "sets to nil the main, list and all constants" do
+        # Create some
+        permission.role(:one)
+        permission.role(:two)
+        MoulinRouge::Permission.all.should_not be_empty
+        MoulinRouge::Permission.list.should_not be_empty
+        # Apply
+        MoulinRouge::Permission.reset!
+        # Evaluate constants
+        MoulinRouge::Permission.class_variable_get(:'@@main').should be_nil
+        MoulinRouge::Permission.class_variable_get(:'@@all').should be_nil
+        MoulinRouge::Permission.class_variable_get(:'@@list').should be_nil
+        # Evaluate has arrays
+        MoulinRouge::Permission.all.should be_empty
+        MoulinRouge::Permission.list.should be_empty
+      end
+    end
   end
 end
