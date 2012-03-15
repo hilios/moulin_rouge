@@ -246,7 +246,7 @@ describe MoulinRouge::Permission do
         permission.role(:name) do
           include :not_found
         end
-      }.should raise_error(MoulinRouge::PermissionNotFound)
+      }.should raise_error(MoulinRouge::RoleNotFound)
     end
   end
   

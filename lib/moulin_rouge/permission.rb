@@ -1,5 +1,5 @@
 module MoulinRouge
-  class PermissionNotFound < Exception; end
+  class RoleNotFound < Exception; end
   # A wrapper to catch and store the DSL methods
   class Permission
     CANCAN_METHODS = [:can, :cannot, :can?, :cannot?]
@@ -94,7 +94,7 @@ module MoulinRouge
     # raises an error if could not found a match.
     def include(name)
       unless from = self.class.all[name]
-        raise PermissionNotFound
+        raise RoleNotFound
       end
       from.childrens.each { |children| childrens << children.dup }
       from.abilities.each { |ability|  abilities << ability.dup  }
