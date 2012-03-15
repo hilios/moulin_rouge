@@ -54,7 +54,7 @@ This will create the following folder structure:
     
 ### Defining roles ###
     
-All your permission files will be stored in the `app/permissions` folder, this is nothing less. There is a custom syntax to help you in the process, but first, you must understand what are Groups and Roles.
+All your permission files will be stored inside the `app/permissions` folder. Just create a ruby file inside and the definitions will be automatically defined.
   
 ```ruby
 role :superuser do
@@ -72,7 +72,9 @@ role :authors do
 end
 ```
 
-Note that the `can` method is the **same** for defining abilities in CanCan, and will be passed as they are on the Ability class. See [Defining Abilities](https://github.com/ryanb/cancan/wiki/defining-abilities) for more information on what you `can` do.
+Note that the `can` method is the **same** for defining abilities in CanCan, and will be passed as they are on the Ability class. See [Defining Abilities](https://github.com/ryanb/cancan/wiki/defining-abilities) for more information on what you `can` do. 
+
+Also, the others CanCan methods are avaliable (`cannot`, `can?`, `cannot?`) and will act like expected.
   
 ### Groups ###
   
@@ -120,7 +122,6 @@ end
 ```
 
 Following the example above, this will generate two roles with the abilities:
-
 
 ```ruby
 MoulinRouge::Permission.list  
