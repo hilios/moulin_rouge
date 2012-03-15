@@ -81,7 +81,7 @@ module MoulinRouge
     
     # Execute all files in the given path in the class scope
     def import(path)
-      Dir[path].each { |file| eval(File.open(file).read) }
+      Dir[path].each { |file| instance_eval(File.open(file).read) }
     end
     
     # Returns the instance of the children with the given name if exists and nil otherwise
