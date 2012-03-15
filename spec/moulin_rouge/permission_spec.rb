@@ -158,7 +158,14 @@ describe MoulinRouge::Permission do
           end
         end
       end
-      
+    end
+
+    it "receives and stores in a proc calls on the model object" do
+      ability = nil
+      permission.role(:test) do
+        ability = can :do, :this, :user_id => current_user.id
+      end
+      ability.args.last[:user_id].should be_a(Proc)
     end
 
     it "raise an error if the method is not registered has a cancan method" do

@@ -41,4 +41,17 @@ describe MoulinRouge::Configuration do
       config.cache.should eq(false)
     end
   end
+
+  describe "#model_instance" do
+    it "returns a boolean" do
+      config.model_instance.should be_a(Symbol)
+    end
+  end
+  
+  describe "#model_instance=" do
+    it "sets the value" do
+      config.model_instance = :user
+      config.model_instance.should eq(:user)
+    end
+  end
 end

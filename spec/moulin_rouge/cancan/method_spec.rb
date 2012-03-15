@@ -4,6 +4,7 @@ describe MoulinRouge::CanCan::Method do
   let(:name)    { :can }
   let(:args)    { [:one, :two] }
   let(:proc)    { Proc.new { :block } }
+  let(:object)  { double(method.name => true) }
   let(:method)  { MoulinRouge::CanCan::Method.new(name, *args, &proc) }
   
   describe "#args" do
@@ -25,10 +26,16 @@ describe MoulinRouge::CanCan::Method do
   end
 
   describe "#send_to" do
-    it "send this method to the given object" do
-      object = double(method.name => true)
+    it "sends this method to the given object" do
       object.should_receive(method.name).with(*method.args, &method.block)
       method.send_to(object)
+    end
+
+    it "evaluate any arguments that are proc" do
+      # proc.should_receive(:call).with(object).once
+      method = MoulinRouge::CanCan::Method.new(:can, :do, :something, :on => proc)
+      method.send_to(object)
+      method.args.last[:on].should be(:block)
     end
   end
 end
