@@ -297,9 +297,9 @@ describe MoulinRouge::Permission do
         # Apply
         MoulinRouge::Permission.reset!
         # Evaluate constants
-        MoulinRouge::Permission.class_variable_get(:'@@main').should be_nil
-        MoulinRouge::Permission.class_variable_get(:'@@all').should be_nil
-        MoulinRouge::Permission.class_variable_get(:'@@list').should be_nil
+        MoulinRouge::Permission.instance_variable_get(:'@main').should be_nil
+        MoulinRouge::Permission.instance_variable_get(:'@all').should be_nil
+        MoulinRouge::Permission.instance_variable_get(:'@list').should be_nil
         # Evaluate has arrays
         MoulinRouge::Permission.all.should be_empty
         MoulinRouge::Permission.list.should be_empty

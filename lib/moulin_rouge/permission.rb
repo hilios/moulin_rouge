@@ -114,16 +114,16 @@ module MoulinRouge
     class << self
       # The instance of the main container, if don't exist create one
       def main
-        @@main ||= self.new(:main)
+        @main ||= self.new(:main)
       end
       # Returns an array with the name of all roles created
       def list
-        @@list ||= []
+        @list ||= []
       end
 
       # Returns an hash with all permissions defined
       def all
-        @@all ||= {}
+        @all ||= {}
       end
 
       # Stores the instance on the all hash and add the name to the list
@@ -135,7 +135,7 @@ module MoulinRouge
 
       # Reset all constants
       def reset! #:nodoc:
-        @@main, @@list, @@all = nil
+        @main, @list, @all = nil
       end
     end
   end
