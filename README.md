@@ -194,7 +194,7 @@ More about the `Responder` class:
 *   http://blog.plataformatec.com.br/2009/08/embracing-rest-with-mind-body-and-soul/
 *   http://archives.ryandaigle.com/articles/2009/8/6/what-s-new-in-edge-rails-cleaner-restful-controllers-w-respond_with/
 
-Credits
+Thanks
 =======
 
 *   [Troles](https://github.com/kristianmandrup/trole)
@@ -204,3 +204,8 @@ Credits
 ### A little of history ###
 
 Mouling Rouge is a cabaret in Paris best know as the birthplace on modern [CanCan](https://github.com/ryanb/cancan) second to [Wikipedia](http://en.wikipedia.org/wiki/Moulin_Rouge).
+
+Credits
+=======
+
+**Edson Hilios** <edson (at) hilios (dot) com (dot) br>
