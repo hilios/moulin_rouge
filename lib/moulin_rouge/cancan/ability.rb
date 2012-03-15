@@ -6,7 +6,6 @@ module MoulinRouge
       include ::CanCan::Ability
       # Define all permissions collect by MoulinRouge
       def initialize(model)
-        p ::MoulinRouge.configuration.cache
         ::MoulinRouge.reload! unless ::MoulinRouge.configuration.cache
         # Set all permissions in main
         ::MoulinRouge::Permission.main.abilities.each do |ability|
