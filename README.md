@@ -85,13 +85,11 @@ group :marketing do
   can :read, Dashboard
 
   role :manager do
-    can :manage, Sales
-    can :manage, Proposals
+    can :manage, Proposal
   end
 
   role :salesman do
-    can :manage, Sales,     :user_id => user.id
-    can :manage, Proposal,  :user_id => user.id
+    can :manage, Proposal, :user_id => user.id
   end
 end
 ```
@@ -103,36 +101,39 @@ Following the example above, will generate two roles:
 ```ruby
 MoulinRouge::Permission.list  
 # => [:marketing_manager, :marketing_salesman]
+# => :marketing_manager   => can :read, Dashboard, can :manage, Proposal
+# => :marketing_salesman  => can :read, Dashboard, can :manage, Proposal, :user_id => user.id
 ```
 
 ### Nested roles ###
 
-You can go even further and nest your rules, the parent one will have the abilities defined in their children, but the children won't have the parent ones.
+When you have nested rules, they will act has namespaces, no ability will be shared unless is explicited with the `include` method.
   
 ```ruby
 role :marketing do
-  can :manage, :all
+  can :manage, Proposal
 
-  group :salesman do
-    role :representatives do
-      can :read, Proposal
-    end
+  role :salesman do
+    can :read, Proposal
   end
 end
 ```
-Following the example above, will generate two roles:
+
+Following the example above, this will generate two roles with the abilities:
 
 
 ```ruby
 MoulinRouge::Permission.list  
-# => [:marketing, :marketing_salesman_representatives]
+# => [:marketing, :marketing_salesman]
+# => :marketing            => can :manage, Proposal
+# => :marketing_salesman   => can :read, Proposal
 ```
-
-And so on.
 
 ### Extending ###
 
-Many times you want to extend a group from another one, in this cases the `include` method will provided such functionality, note that *all* your abilities and nested roles will be append to your target, also, you should provide the full permission name.
+Many times you want to extend a role from another one, **MoulinRouge** let you `include` the abilities from one role to another, all the abilities from the target will be appended to the caller. 
+
+Only roles can be included, and if you provide a name that isn't defined, a `RoleNotFound` will be raised. Notice by the example bellow, that you should provide the full name of the role in order to find the correct one.
 
 ```ruby
 group :marketing do
