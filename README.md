@@ -67,7 +67,7 @@ end
 
 role :authors do
   can :manage, Article do |article|
-    article.user_id == user.id
+    article.user_id == current_user.id
   end
 end
 ```
@@ -91,7 +91,7 @@ group :marketing do
   end
 
   role :salesman do
-    can :manage, Proposal, :user_id => user.id
+    can :manage, Proposal, :user_id => current_user.id
   end
 end
 ```
@@ -104,7 +104,7 @@ Following the example above, will generate two roles:
 MoulinRouge::Permission.list  
 # => [:marketing_manager, :marketing_salesman]
 # => :marketing_manager   => can :read, Dashboard, can :manage, Proposal
-# => :marketing_salesman  => can :read, Dashboard, can :manage, Proposal, :user_id => user.id
+# => :marketing_salesman  => can :read, Dashboard, can :manage, Proposal, :user_id => current_user.id
 ```
 
 ### Nested roles ###
