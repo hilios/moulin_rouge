@@ -54,4 +54,18 @@ describe MoulinRouge::Configuration do
       config.model_instance.should eq(:user)
     end
   end
+
+  describe "#model" do
+    it "returns an class or nil" do
+      config.model.should be_nil
+    end
+  end
+  
+  describe "#model=" do
+    it "sets the class" do
+      klass = Class.new
+      config.model = klass
+      config.model.should eq(klass)
+    end
+  end
 end
