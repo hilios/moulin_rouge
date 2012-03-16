@@ -3,6 +3,7 @@ PATH
   specs:
     moulin_rouge (0.0.1.alpha)
       cancan
+      thor
 
 GEM
   remote: http://rubygems.org/

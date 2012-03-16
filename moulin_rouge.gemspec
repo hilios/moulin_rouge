@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "cancan"
+  s.add_dependency "thor"
 
   s.add_development_dependency "rdoc"
   s.add_development_dependency "rspec"
