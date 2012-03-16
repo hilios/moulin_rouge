@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    moulin_rouge (0.0.1.alpha)
+    moulin_rouge (0.0.1.beta)
       cancan
 
 GEM

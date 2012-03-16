@@ -18,11 +18,11 @@ And install it
 
 Run the generator to install the roles and permissions structure:
 
-    rails g moulinrouge:install
+    rails g moulin_rouge:install
   
 Generate a permission file:
 
-    rails g moulinrouge:permission <name>
+    rails g moulin_rouge:permission <name>
     
 Add your permissions to newly created file:
   

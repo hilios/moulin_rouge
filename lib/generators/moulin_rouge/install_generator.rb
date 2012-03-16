@@ -9,8 +9,8 @@ module MoulinRouge
       desc "Installs the gem folder structure for the app"
 
       def generate_folder_structure
-        directory("install")
-        invoke "moulin_rouge:permission admin"
+        directory("install", "")
+        generate("moulin_rouge:permission", "admin")
       end
     end
   end
