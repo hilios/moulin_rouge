@@ -7,12 +7,12 @@ module MoulinRouge
       end
 
       # Send this method to the given object
-      def send_to(object)
+      def send_to(object, proc_scope = nil)
         # Evaluate any proc in args
         if args.last.is_a?(Hash)
           args.last.each do |key, value|
             if value.is_a?(Proc)
-              args.last[key] = value.call(object)
+              args.last[key] = value.call(proc_scope || object)
             end
           end
         end

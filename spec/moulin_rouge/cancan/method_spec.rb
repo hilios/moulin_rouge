@@ -32,7 +32,6 @@ describe MoulinRouge::CanCan::Method do
     end
 
     it "evaluate any arguments that are proc" do
-      # proc.should_receive(:call).with(object).once
       method = MoulinRouge::CanCan::Method.new(:can, :do, :something, :on => proc)
       method.send_to(object)
       method.args.last[:on].should be(:block)

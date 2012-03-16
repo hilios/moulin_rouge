@@ -77,5 +77,13 @@ describe MoulinRouge::CanCan::Ability do
       MoulinRouge.configuration.model = klass
       MoulinRouge::CanCan::Ability.new(nil)
     end
+
+    it "executes any proc on the model object" do
+      MoulinRouge::Permission.reset!
+      ####
+      MoulinRouge::Permission.main.can(:do, :this, :user_id => MoulinRouge::ModelDouble.new.id)
+      model.should_receive(:id)
+      ability # Execute
+    end
   end
 end
