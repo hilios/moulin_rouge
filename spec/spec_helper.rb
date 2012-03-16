@@ -9,9 +9,9 @@ require 'rspec'
 # in spec/support/ and its subdirectories.
 Dir[File.expand_path("spec/support/**/*.rb")].each {|f| require f}
 
-# Require all files from the project, except the generators templates
+# Require all files from the project, except the generators
 Dir[File.expand_path("lib/**/*.rb")].each do |f| 
-  require f unless f =~ /lib\/generators\/moulin_rouge\/templates/
+  require f unless f =~ /lib\/generators/
 end
 
 def permission_file
