@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe MoulinRouge::ModelDouble do
-  let(:model) { ModelDouble.new }
+  let(:model) { MoulinRouge::ModelDouble.new }
   
   it "returns an proc for every method called in this class" do
     model.id.should be_a(Proc)

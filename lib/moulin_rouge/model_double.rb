@@ -3,7 +3,7 @@ module MoulinRouge
     # Return an block for later evaluation
     def method_missing(name, *args, &block)
       lambda do |scope|
-        scope.send(name.to_sym, *args, &block)
+        scope.send(name, *args, &block)
       end
     end
   end
