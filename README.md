@@ -209,7 +209,9 @@ Thanks
 
 Mouling Rouge is a cabaret in Paris best know as the birthplace on modern [CanCan](https://github.com/ryanb/cancan) second to [Wikipedia](http://en.wikipedia.org/wiki/Moulin_Rouge).
 
-Credits
-=======
+Copytirght
+==========
 
-**Edson Hilios** <edson (at) hilios (dot) com (dot) br>
+Copyrights 2012 [**Edson Hilios**](http://edson.hilios.com.br) edson (at) hilios (dot) com (dot) br
+
+This software is licensed under [MIT-LICENSE](https://github.com/hilios/moulin_rouge/blob/master/MIT-LICENSE)
