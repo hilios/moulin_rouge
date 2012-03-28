@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe MoulinRouge do
-  it "should be a module" do
+  it "is a module" do
     MoulinRouge.should be_a(Module)
   end
   
@@ -22,7 +22,7 @@ describe MoulinRouge do
 
     describe "#run!" do
       it "calls the load! method" do
-        MoulinRouge.should_receive(:load!).once
+        MoulinRouge.should_receive(:load!).twice # Here and inside spec_helpe.rb before(:each)
         MoulinRouge.run!
       end
 
@@ -43,33 +43,23 @@ describe MoulinRouge do
     end
 
     describe "#load!" do
-      context "(with stubs)" do
-        it "call import the config path on the main permission" do
-          MoulinRouge::Permission.main.should_receive(:import).with(MoulinRouge.configuration.path).once
-          MoulinRouge.load!
-          MoulinRouge::Permission.main.should_not be_nil
-        end
-      end
-
-      context "(without stubs)" do
-        it "evaluate all permissions in the path" do
-          MoulinRouge.load!
-          MoulinRouge::Permission.main.childrens.should_not be_empty
-        end
+      it "compile authorizations" do
+        MoulinRouge::Authorization.should_receive(:compile!).twice # Here and inside spec_helpe.rb before(:each)
+        MoulinRouge.load!
       end
     end
 
     describe "reset!" do
-      it "calls the reset! method on Permission" do
-        MoulinRouge::Permission.should_receive(:reset!).twice # One in the before(:each) in spec_helper.rb and another here
+      it "calls the reset! method on Authorization" do
+        MoulinRouge::Authorization.should_receive(:reset!).twice # One in before(:each) inside spec_helper.rb and another here
         MoulinRouge.reset!
       end
     end
 
     describe "#reload!" do
       it "Reset all permissions and load them again" do
-        MoulinRouge.should_receive(:reset!).twice # One in the before(:each) in spec_helper.rb and another here
-        MoulinRouge.should_receive(:load!).once
+        MoulinRouge.should_receive(:reset!).twice # Here and inside spec_helpe.rb before(:each)
+        MoulinRouge.should_receive(:load!).twice # Here and inside spec_helpe.rb before(:each)
         MoulinRouge.reload!
       end
     end

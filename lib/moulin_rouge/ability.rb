@@ -1,7 +1,7 @@
 module MoulinRouge
   class RoleNotFound < Exception; end
-  # A wrapper to catch and store the DSL methods
-  class Permission
+  # The CanCan wrapper with the custom DSL methods
+  class Ability
     CANCAN_METHODS = [:can, :cannot, :can?, :cannot?]
     # Returns a string with the given name
     attr_reader :singular_name
@@ -22,11 +22,12 @@ module MoulinRouge
       @is_group       = options.delete(:group)
       abilities.concat(parent.abilities) if not parent.nil? and parent.group?
       instance_eval(&block) if block_given?
-      # Store this permission
-      self.class.add(self) unless parent.nil? or @is_group
+      # Register this ability
+      MoulinRouge::Authorization.register(self) unless parent.nil? or group?
     end
 
-    def method_missing(name, *args, &block)
+    # Stores the CanCan methods and current_user method to later evaluation
+    def method_missing(name, *args, &block) #:nodoc:
       return store_method(name, *args, &block) if CANCAN_METHODS.include?(name)
       return MoulinRouge::ModelDouble.new if MoulinRouge.configuration.model_instance == name
       super(name, *args, &block)
@@ -34,7 +35,7 @@ module MoulinRouge
     
     # Define a new role inside this scope. If exists a role with the 
     # same name evaluate the block inside them instead of create a new one
-    def role(name, options = {}, &block)
+    def role(name = :main, options = {}, &block)
       if children = find(name)
         children.instance_eval(&block)
         children
@@ -50,9 +51,35 @@ module MoulinRouge
       role(name, options, &block)
     end
 
+    # Appends all childrens and abilities from one object to another,
+    # raises an error if could not found a match.
+    def include(name)
+      unless from = MoulinRouge::Authorization.abilities[name]
+        raise RoleNotFound
+      end
+      from.childrens.each { |children| childrens << children.dup }
+      from.abilities.each { |ability|  abilities << ability.dup  }
+    end
+
+    # Returns a symbol with the name appended with the parents separeted by a underscore
+    def name
+      unless @name
+        @name  = []
+        @name << self.parent.name.to_s if not self.parent.nil? and not self.parent.parent.nil?
+        @name << self.singular_name.to_s
+        @name  = @name.join('_')
+      end
+      @name.to_sym
+    end
+
     # Returns true if is a group
     def group?
       @is_group
+    end
+
+    # Returns true if is a groups
+    def role?
+      !group?
     end
 
     # Add the given parameters to the authorizations list
@@ -71,70 +98,16 @@ module MoulinRouge
       @abilities ||= []
     end
 
-    # Returns all abilities for this permission.
-    # If this is a group, grab the abilities from parent.
+    # Returns an array with the abilities collected from this node and from
+    # their childrens.
     def inherithed_abilities
       abilities.concat(childrens.map(&:inherithed_abilities).flatten).uniq
-    end
-    
-    # Execute all files in the given path in the class scope
-    def import(path)
-      Dir[path].each { |file| instance_eval(File.open(file).read) }
     end
     
     # Returns the instance of the children with the given name if exists and nil otherwise
     def find(name)
       childrens.each { |children| return children if children.name == name or children.singular_name == name }
      return nil
-    end
-
-    # Appends all childrens and abilities from one object to another,
-    # raises an error if could not found a match.
-    def include(name)
-      unless from = self.class.all[name]
-        raise RoleNotFound
-      end
-      from.childrens.each { |children| childrens << children.dup }
-      from.abilities.each { |ability|  abilities << ability.dup  }
-    end
-    
-    # Returns a symbol with the name appended with the parents separeted by a underscore
-    def name
-      unless @name
-        @name  = []
-        @name << self.parent.name.to_s if not self.parent.nil? and not self.parent.parent.nil?
-        @name << self.singular_name.to_s
-        @name  = @name.join('_')
-      end
-      @name.to_sym
-    end
-    
-    class << self
-      # The instance of the main container, if don't exist create one
-      def main
-        @main ||= self.new(:main)
-      end
-      # Returns an array with the name of all roles created
-      def list
-        @list ||= []
-      end
-
-      # Returns an hash with all permissions defined
-      def all
-        @all ||= {}
-      end
-
-      # Stores the instance on the all hash and add the name to the list
-      def add(instance)
-        name = instance.name
-        self.all[name] = instance
-        self.list << name unless self.list.include?(name)
-      end
-
-      # Reset all constants
-      def reset! #:nodoc:
-        @main, @list, @all = nil
-      end
     end
   end
 end

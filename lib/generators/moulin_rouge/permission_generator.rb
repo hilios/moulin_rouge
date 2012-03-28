@@ -2,7 +2,7 @@ require 'rails/generators'
 
 module MoulinRouge
   module Generators
-    class PermissionGenerator < ::Rails::Generators::Base
+    class AuthorizationGenerator < ::Rails::Generators::Base
 
       source_root File.expand_path('../templates', __FILE__)
 

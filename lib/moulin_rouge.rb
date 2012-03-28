@@ -23,7 +23,7 @@ module MoulinRouge
 
     # Import all permission files in the configuration
     def self.load!
-      MoulinRouge::Permission.main.import(MoulinRouge.configuration.path)
+      MoulinRouge::Authorization.compile!
     end
 
     # Returns true if the run! method was called and false oterwise
@@ -39,6 +39,6 @@ module MoulinRouge
 
     # Reset all constants
     def self.reset! #:nodoc:
-      MoulinRouge::Permission.reset!
+      MoulinRouge::Authorization.reset!
     end
 end

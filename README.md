@@ -1,9 +1,9 @@
 Moulin Rouge
 ============
 
-**Moulin Rouge** is a DSL to manage your permissions and groups of access outside the [CanCan](https://github.com/ryanb/cancan) Ability class. It will help you organize and declare your permissions with has much ruby files you judge necessary, that are automatically pushed to CanCan authorization system. It is also decoupled from the role system.
+**Moulin Rouge** offers a custom and easy DSL to manage your authorizations and groups of access with [CanCan](https://github.com/ryanb/cancan). The main feature is the ability to split your authorizations in many ruby files, that are automatically pushed to CanCan authorization system. It is also decoupled from any role system giving you flexibility.
 
-There are a bunch of examples bellow to show you how to implement.
+There are a bunch of examples bellow to show you how to get started and explaining all features.
 
 Installation
 ------------
@@ -22,13 +22,15 @@ Run the generator to install the roles and permissions structure:
   
 Generate a permission file:
 
-    rails g moulin_rouge:permission <name>
+    rails g moulin_rouge:auth <name>
     
 Add your permissions to newly created file:
   
 ```ruby
-role :name do
-  can :read, :something
+class UserAuthorization < MoulinRouge::Authorization
+  role :name do
+    can :read, :something
+  end
 end
 ```
 
@@ -41,33 +43,35 @@ First of all, you have to accept that the role registering belongs to the ruby c
 
 When you run:
 
-      bundle g moulinrouge:install
+      bundle g moulin_rouge:install
     
 This will create the following folder structure:
 
       root
       | app/
-      | | permissions/
+      | | authorizations/
       | config/
       | | initalizers
       | | | moulin_rouge.rb
     
 ### Defining roles ###
     
-All your permission files will be stored inside the `app/permissions` folder. Just create a ruby file inside and the definitions will be automatically defined.
+All your authorization files will be stored inside the `app/authorizations` folder. Just create a ruby file inside and the definitions will be automatically defined.
   
 ```ruby
-role :superuser do
-  can :manage, :all
-end
+class UserAuthorization < MoulinRouge::Authorization
+  role :superuser do
+    can :manage, :all
+  end
 
-role :editors do
-  can :manage, Articles
-end
+  role :editors do
+    can :manage, Articles
+  end
 
-role :authors do
-  can :manage, Article do |article|
-    article.user_id == current_user.id
+  role :authors do
+    can :manage, Article do |article|
+      article.user_id == current_user.id
+    end
   end
 end
 ```
@@ -78,20 +82,22 @@ Also, the others CanCan methods are avaliable (`cannot`, `can?`, `cannot?`) and 
   
 ### Groups ###
   
-A group is an easy way to organize your permissions, no matter where file the definition is. All groups with the same name, will have their abilities and permissions nested together.
+A group is an easy way to organize your authorization. All groups with the same name, will have their abilities and authorizations nested together.
 
-The group will delegate all abilities defined into, to their childrens, so any children role or group  will have the abilities defined in the parent. Also the group is not an avaliable role, they only serve has namespaces.
+The group will delegate all abilities defined inside of it, to their childrens, so any role or group  will have the same abilities defined in the parent. Also the group is not an avaliable role, they only serve has namespaces.
 
 ```ruby
-group :marketing do
-  can :read, Dashboard
+class UserAuthorization < MoulinRouge::Authorization
+  group :marketing do
+    can :read, Dashboard
 
-  role :manager do
-    can :manage, Proposal
-  end
+    role :manager do
+      can :manage, Proposal
+    end
 
-  role :salesman do
-    can :manage, Proposal, :user_id => current_user.id
+    role :salesman do
+      can :manage, Proposal, :user_id => current_user.id
+    end
   end
 end
 ```
@@ -101,7 +107,7 @@ To avoid name conflicts, whenever you have a nested roles or groups, their name 
 Following the example above, will generate two roles:
 
 ```ruby
-MoulinRouge::Permission.list  
+MoulinRouge::Authorization.defined_roles
 # => [:marketing_manager, :marketing_salesman]
 # => :marketing_manager   => can :read, Dashboard, can :manage, Proposal
 # => :marketing_salesman  => can :read, Dashboard, can :manage, Proposal, :user_id => current_user.id
@@ -112,11 +118,13 @@ MoulinRouge::Permission.list
 When you have nested rules, they will act has namespaces, no ability will be shared unless is explicited with the `include` method.
   
 ```ruby
-role :marketing do
-  can :manage, Proposal
+class UserAuthorization < MoulinRouge::Authorization
+  role :marketing do
+    can :manage, Proposal
 
-  role :salesman do
-    can :read, Proposal
+    role :salesman do
+      can :read, Proposal
+    end
   end
 end
 ```
@@ -124,7 +132,7 @@ end
 Following the example above, this will generate two roles with the abilities:
 
 ```ruby
-MoulinRouge::Permission.list  
+MoulinRouge::Authorization.defined_roles
 # => [:marketing, :marketing_salesman]
 # => :marketing            => can :manage, Proposal
 # => :marketing_salesman   => can :read, Proposal
@@ -132,19 +140,21 @@ MoulinRouge::Permission.list
 
 ### Extending ###
 
-Many times you want to extend a role from another one, **MoulinRouge** let you `include` the abilities from one role to another, all the abilities from the target will be appended to the caller. 
+If you want extend the abilities from a role to another, **MoulinRouge** let you `include` them automatically. All the abilities from the target will be appended to the caller.
 
-Only roles can be included, and if you provide a name that isn't defined, a `RoleNotFound` will be raised. Notice by the example bellow, that you should provide the full name of the role in order to find the correct one.
+Only roles can be included, and if you provide a name that is not defined, a `RoleNotFound` will be raised. *Notice* by the example bellow, that you should provide the full name of the role in order to find them.
 
 ```ruby
-group :marketing do
-  role :admin do
-    can :do, :something
+class UserAuthorization < MoulinRouge::Authorization
+  group :marketing do
+    role :admin do
+      can :do, :something
+    end
   end
-end
 
-role :super do
-  include :marketing_admin
+  role :super do
+    include :marketing_admin
+  end
 end
 ```
 
@@ -153,15 +163,15 @@ Configuration
 
 ```ruby
 MoulinRouge.configure do |config|
-  # Cache permissions
+  # Cache authorizations
   config.cache = Rails.env.production?
-  # The search path for permissions
-  config.path = 'app/permissions/**/*.rb'
-  # The method that will test the permission
+  # Path for search the authorizations files
+  config.path = 'app/authorizations/**/*.rb'
+  # Method name that will send to the user to test if the role is assigned to him
   config.test_method = :is?
-  # The class of the model
+  # Your user model
   config.model = User
-  # How you like to call the active user model
+  # The method name that will access the current user information
   config.model_instance = :current_user
 end
 ```
@@ -169,7 +179,7 @@ end
 Goodies
 -------
 
-For those who like I dislikes the `load_and_authorize_resource` method from CanCan, here is provided a cleaner and more flexible solution through `ActionController::Responder`, the `MoulinRouge::CanCan::Responder` bellow there are instruction to activate them.
+For those who does not like the `load_and_authorize_resource` method from CanCan, here is provided a cleaner and more flexible solution through `ActionController::Responder`, the `MoulinRouge::CanCan::Responder` bellow there are instruction to activate them.
 
 Create the file `lib/application_responder.rb` with the following:
 
@@ -198,8 +208,17 @@ More about the `Responder` class:
 *   http://blog.plataformatec.com.br/2009/08/embracing-rest-with-mind-body-and-soul/
 *   http://archives.ryandaigle.com/articles/2009/8/6/what-s-new-in-edge-rails-cleaner-restful-controllers-w-respond_with/
 
-Thanks
+Testing
 =======
+
+This gem uses the [RSpec-2](https://www.relishapp.com/rspec) lib for BDD testing, with the help of [Guard](https://github.com/guard/guard) to autotest. For development just execute the following line:
+
+    bundle exec guard
+
+And it will perform all tests, and reload every time you implement something new.
+
+Thanks
+======
 
 *   [Troles](https://github.com/kristianmandrup/trole)
 *   [CanTango](https://github.com/kristianmandrup/cantango)

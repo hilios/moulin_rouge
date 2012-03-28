@@ -4,23 +4,23 @@ SimpleCov.start
 require 'rubygems'
 require 'bundler/setup'
 require 'rspec'
+require 'moulin_rouge'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[File.expand_path("spec/support/**/*.rb")].each {|f| require f}
 
-# Require all files from the project, except the generators
-Dir[File.expand_path("lib/**/*.rb")].each do |f| 
-  require f unless f =~ /lib\/generators/
-end
-
 def permission_file
-  File.expand_path("spec/fixtures/spec_permission.rb")
+  File.expand_path("spec/fixtures/spec_authorization.rb")
 end
 
-def create_permission(content)
+def create_authorization(content)
   f = File.open(permission_file, 'w')
-  f.write(content)
+  f.write %|
+  class DynamicSpecAuthorization < MoulinRouge::Authorization
+    #{content}
+  end
+  |
 ensure
   f.close
 end
@@ -35,7 +35,7 @@ RSpec.configure do |config|
   # Reset the MoulinRouge global variables
   # Remove the permission file created by the helper
   config.after(:each) do
-    MoulinRouge.reset!
+    MoulinRouge.reload!
     MoulinRouge.configuration.cache = true
     FileUtils.rm_rf(permission_file) if File.exists?(permission_file)
   end

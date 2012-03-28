@@ -4,7 +4,7 @@ describe MoulinRouge::CanCan::Ability do
   let(:test_method) { MoulinRouge.configuration.test_method.to_sym }
   let(:model)       { double("model", test_method => true) }
   let(:ability)     { MoulinRouge::CanCan::Ability.new(model) }
-  let(:permission)  { MoulinRouge::Permission.main }
+  let(:permission)  { MoulinRouge::Authorization.main }
 
   before(:each) do
     MoulinRouge::CanCan::Ability.any_instance.stub(:can) { true }
@@ -56,7 +56,7 @@ describe MoulinRouge::CanCan::Ability do
 
     it "executes the can method with exactly the same arguments and block that was stored" do
       # Concat permissions from main and from all defined classes
-      abilities = permission.abilities + MoulinRouge::Permission.all.values.map(&:abilities)
+      abilities = permission.abilities + MoulinRouge::Authorization.abilities.values.map(&:abilities)
       abilities.flatten.each do |ability|
         MoulinRouge::CanCan::Ability.any_instance.should_receive(:can).with(*ability.args, &ability.block).at_least(:once)
       end
@@ -65,7 +65,7 @@ describe MoulinRouge::CanCan::Ability do
 
     it "reloads all permissions when cache is set to false" do
       MoulinRouge.configuration.cache = false
-      MoulinRouge.should_receive(:reload!).once
+      MoulinRouge.should_receive(:reload!).twice # Here and inside spec_helpe.rb before(:each)
       ability # Execute
     end
 
@@ -79,9 +79,9 @@ describe MoulinRouge::CanCan::Ability do
     end
 
     it "executes any proc on the model object" do
-      MoulinRouge::Permission.reset!
+      MoulinRouge::Authorization.reset!
       ####
-      MoulinRouge::Permission.main.can(:do, :this, :user_id => MoulinRouge::ModelDouble.new.id)
+      MoulinRouge::Authorization.main.can(:do, :this, :user_id => MoulinRouge::ModelDouble.new.id)
       model.should_receive(:id)
       ability # Execute
     end
