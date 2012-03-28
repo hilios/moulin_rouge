@@ -17,7 +17,7 @@ end
 def create_authorization(content)
   f = File.open(permission_file, 'w')
   f.write %|
-  class DynamicSpecAuthorization < MoulinRouge::Authorization
+  class SpecAuthorization < MoulinRouge::Authorization
     #{content}
   end
   |
