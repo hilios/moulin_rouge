@@ -19,18 +19,18 @@ describe MoulinRouge::Authorization do
       end
     end
 
-    describe "#list" do
+    describe "#roles" do
       it "returns an array" do
         MoulinRouge::Authorization.roles.should be_a(Array)
       end
     end
 
-    describe "#all" do
-      it "returns an hash with all created abilitys" do
+    describe "#abilities" do
+      it "returns a hash with all registered roles with assigned abilities" do
         MoulinRouge::Authorization.abilities.should be_a(Hash)
       end
 
-      it "store all abilitys instantiated unless the main one" do
+      it "store all abilities instantiated unless the main one" do
         hello_world = ability.role(:hello_world) do
           can :do
         end
@@ -38,11 +38,9 @@ describe MoulinRouge::Authorization do
       end
     end
 
-    describe "#add" do
+    describe "#register" do
       it "should append the object instance on Authorization.all and Authorization.names" do
         object = double(:name => :foo)
-        MoulinRouge::Authorization.stub(:abilities) { @abilities  ||= double() }
-        MoulinRouge::Authorization.stub(:roles)     { @roles      ||= double(:include? => false) }
         MoulinRouge::Authorization.abilities.should_receive(:'[]=').with(object.name, object)
         MoulinRouge::Authorization.roles.should_receive(:'<<').with(object.name)
         MoulinRouge::Authorization.register(object)
@@ -53,14 +51,12 @@ describe MoulinRouge::Authorization do
       let(:files_loaded) { [] }
 
       it "load all files in the configuration path" do
-        pending
         Kernel.stub(:load) { |file| files_loaded << file }
         MoulinRouge::Authorization.compile!
         files_loaded.should include(*Dir[MoulinRouge.configuration.path])
       end
 
       it "should load all roles defined into the Authorization abilities" do
-        pending
         MoulinRouge::Authorization.roles.should be_empty
         MoulinRouge::Authorization.compile!
         MoulinRouge::Authorization.roles.should_not be_empty
@@ -105,9 +101,9 @@ describe MoulinRouge::Authorization do
         # Apply
         MoulinRouge::Authorization.reset!
         # Evaluate constants
-        MoulinRouge::Authorization.instance_variable_get(:'@main').should be_nil
-        MoulinRouge::Authorization.instance_variable_get(:'@abilities').should be_nil
-        MoulinRouge::Authorization.instance_variable_get(:'@roles').should be_nil
+        MoulinRouge::Authorization.class_variable_get(:'@@main').should be_nil
+        MoulinRouge::Authorization.class_variable_get(:'@@abilities').should be_nil
+        MoulinRouge::Authorization.class_variable_get(:'@@roles').should be_nil
         # Evaluate has arrays
         MoulinRouge::Authorization.abilities.should be_empty
         MoulinRouge::Authorization.roles.should be_empty

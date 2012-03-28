@@ -12,17 +12,17 @@ module MoulinRouge
 
       # The instance of the main ability
       def main
-        @main ||= MoulinRouge::Ability.new(:main)
+        @@main ||= MoulinRouge::Ability.new(:main)
       end
 
       # Returns an array with the name of all roles created
       def roles
-        @roles ||= []
+        @@roles ||= []
       end
 
       # Returns an hash with all permissions defined
       def abilities
-        @abilities ||= {}
+        @@abilities ||= {}
       end
 
       # Register an ability in the singleton
@@ -39,7 +39,7 @@ module MoulinRouge
 
       # Reset all constants
       def reset! #:nodoc:
-        @main, @roles, @abilities = nil
+        @@main, @@roles, @@abilities = nil
       end
     end
   end

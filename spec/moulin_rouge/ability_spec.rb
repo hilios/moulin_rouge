@@ -13,7 +13,7 @@ describe MoulinRouge::Ability do
     end
     
     it "registers the ability instance into authorization" do
-      MoulinRouge::Authorization.should_receive(:register)
+      MoulinRouge::Authorization.should_receive(:register).at_least(:once)
       MoulinRouge::Ability.new(:main) do
         role(:one)
       end
