@@ -77,7 +77,7 @@ module MoulinRouge
       @is_group
     end
 
-    # Returns true if is a groups
+    # Returns true if is a role
     def role?
       !group?
     end

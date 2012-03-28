@@ -122,6 +122,15 @@ describe MoulinRouge::Ability do
       group.group?.should be_true
     end
   end
+  
+  describe "#role?" do
+    it "returns true if is a group and false otherwise" do
+      role = ability.role(:role)
+      group = ability.group(:group)
+      role.role?.should be_true
+      group.role?.should be_false
+    end
+  end
 
   describe "#method_missing" do
     let(:args) { [:one, :two] }

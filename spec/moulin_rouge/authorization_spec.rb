@@ -60,6 +60,7 @@ describe MoulinRouge::Authorization do
         MoulinRouge::Authorization.roles.should be_empty
         MoulinRouge::Authorization.compile!
         MoulinRouge::Authorization.roles.should_not be_empty
+        MoulinRouge::Authorization.roles.should include(:fixture)
       end
       
       it "let raise exceptions when there are syntax errors" do
