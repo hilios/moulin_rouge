@@ -10,7 +10,7 @@ module MoulinRouge
 
       def generate_folder_structure
         initializer("moulin_rouge.rb", "initializer.rb")
-        generate("moulin_rouge:permission", "admin")
+        generate("moulin_rouge:permission", "user")
       end
     end
   end
