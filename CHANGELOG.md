@@ -4,6 +4,7 @@ CHANGELOG
 0.0.1.beta2 (Mar 28, 2011)
 
 *   Instead of declarate the authorization in plain ruby file, that could break spec and other things, manage the scope to the MoulinRouge::Authorization class
+*   Changing the name of the generator to match the name changes
 
 0.0.1.beta (Mar 16, 2011)
 

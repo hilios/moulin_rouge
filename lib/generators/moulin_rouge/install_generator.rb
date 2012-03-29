@@ -6,10 +6,10 @@ module MoulinRouge
 
       source_root File.expand_path('../templates', __FILE__)
 
-      desc "Installs the gem folder structure for the app"
+      desc "Installs the gem folder structure"
 
       def generate_folder_structure
-        directory("install", "./")
+        initializer("moulin_rouge.rb", "initializer.rb")
         generate("moulin_rouge:permission", "admin")
       end
     end
