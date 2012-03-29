@@ -9,7 +9,7 @@ module MoulinRouge
       desc "Installs the gem folder structure"
 
       def generate_folder_structure
-        initializer("moulin_rouge.rb", "initializer.rb")
+        copy_file("initializer.rb", "config/initializers/moulin_rouge.rb")
         generate("moulin_rouge:permission", "user")
       end
     end
