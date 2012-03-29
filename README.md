@@ -209,16 +209,16 @@ More about the `Responder` class:
 *   http://archives.ryandaigle.com/articles/2009/8/6/what-s-new-in-edge-rails-cleaner-restful-controllers-w-respond_with/
 
 Testing
-=======
+-------
 
 This gem uses the [RSpec-2](https://www.relishapp.com/rspec) lib for BDD testing, with the help of [Guard](https://github.com/guard/guard) to autotest. For development just execute the following line:
 
     bundle exec guard
 
-And it will perform all tests, and reload every time you implement something new.
+And it will perform all tests, and reload every time you implement something new. Also you can follow the test coverage by [simplecov](https://github.com/colszowka/simplecov).
 
 Thanks
-======
+------
 
 *   [Troles](https://github.com/kristianmandrup/trole)
 *   [CanTango](https://github.com/kristianmandrup/cantango)
@@ -228,8 +228,8 @@ Thanks
 
 Mouling Rouge is a cabaret in Paris best know as the birthplace on modern [CanCan](https://github.com/ryanb/cancan) second to [Wikipedia](http://en.wikipedia.org/wiki/Moulin_Rouge).
 
-Copytirght
-==========
+Copyrights
+----------
 
 Copyrights 2012 [**Edson Hilios**](http://edson.hilios.com.br) edson (at) hilios (dot) com (dot) br
 
