@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Edson Hilios"]
   s.email       = ["edson.hilios@gmail.com"]
   s.homepage    = "https://github.com/hilios/moulin_rouge"
-  s.summary     = "Organize CanCan permissions in many files and DRY."
-  s.description = "A wrapper to CanCan authorization system, that lets you declare permissions in many ruby files. Adds new functionalities allowing you do more with less code and DRY."
+  s.summary     = "An DSL to manage your authorizations DRY in CanCan"
+  s.description = "An DSL to manage your authorizations and groups of access with CanCan without repeating yourself using as many files you want."
 
   s.files         = Dir["CHANGELOG.md", "MIT-LICENSE", "README.md", "lib/**/*", "init.rb"]
   s.test_files    = Dir["spec/**/*"]
