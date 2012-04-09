@@ -1,5 +1,7 @@
 module MoulinRouge
-  # Creates a common scope to register roles and abilities
+  # An sinlgeton inherited instace of this class acts like a 
+  # proxy to main ability evaluating all methods in its scope
+  # to proper later evaluation
   class Authorization
     # Avoid direct initialization, just act as a singleton
     private_class_method :new

@@ -107,7 +107,7 @@ To avoid name conflicts, whenever you have a nested roles or groups, their name 
 Following the example above, will generate two roles:
 
 ```ruby
-MoulinRouge::Authorization.defined_roles
+MoulinRouge::Authorization.roles
 # => [:marketing_manager, :marketing_salesman]
 # => :marketing_manager   => can :read, Dashboard, can :manage, Proposal
 # => :marketing_salesman  => can :read, Dashboard, can :manage, Proposal, :user_id => current_user.id
@@ -132,7 +132,7 @@ end
 Following the example above, this will generate two roles with the abilities:
 
 ```ruby
-MoulinRouge::Authorization.defined_roles
+MoulinRouge::Authorization.roles
 # => [:marketing, :marketing_salesman]
 # => :marketing            => can :manage, Proposal
 # => :marketing_salesman   => can :read, Proposal
