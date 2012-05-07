@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+0.0.1 (May 7, 2012)
+
+*   Implementing the gem by a mountable engine
+*   Adjusting the generators
+
 0.0.1.beta2 (Mar 28, 2011)
 
 *   Instead of declarate the authorization in plain ruby file, that could break spec and other things, manage the scope to the MoulinRouge::Authorization class

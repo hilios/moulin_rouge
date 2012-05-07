@@ -179,6 +179,8 @@ end
 Goodies
 -------
 
+*This session is in experimental development and will be part of the next release!*
+
 For those who does not like the `load_and_authorize_resource` method from CanCan, here is provided a cleaner and more flexible solution through `ActionController::Responder`, the `MoulinRouge::CanCan::Responder` bellow there are instruction to activate them.
 
 Create the file `lib/application_responder.rb` with the following:
