@@ -1,5 +1,6 @@
+require 'rails'
 module MoulinRouge
-  class Engine < Rails::Engine
+  class Engine < ::Rails::Engine
     # isolate_namespace MoulinRouge
 
     initializer "moulin_rouge" do |app|
